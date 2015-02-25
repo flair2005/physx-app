@@ -1,0 +1,73 @@
+Texture2D ObjTexture;
+SamplerState ObjSamplerState;
+
+struct Light
+{
+	float3 dir;
+	float3 pos;
+	float  range;
+	float3 att;
+	float4 ambient;
+	float4 diffuse;
+	float cone;
+};
+
+cbuffer cbPerFrame
+{
+	Light light;
+};
+
+struct PixelInputType
+{
+    float4 pos : SV_POSITION;
+	float2 tex : TEXCOORD;
+	float3 Norm : NORMAL;	
+	float4 worldPos : POSITION;
+};
+
+float4 PS(PixelInputType input) : SV_TARGET
+{
+	float3 finalColor = float3(0.0f, 0.0f, 0.0f);
+
+	input.Norm = normalize(input.Norm);
+
+    float4 diffuse = ObjTexture.Sample( ObjSamplerState, input.tex );
+	
+	// —оздаем вектор между позицией света и позицией пиксел€
+	float3 lightToPixelVec = light.pos - input.worldPos;
+		
+	// Ќаходим рассто€ние между светом и пикселем (это длина вектора)
+	float d = length(lightToPixelVec);
+	
+	// —оздаем фоновый (Ambient) свет
+	float3 finalAmbient = diffuse * light.ambient;
+
+	// ≈сли пиксель слишком далеко расположен, возвращаем цвет пиксел€ фонового света
+	if( d > light.range )
+		return float4(finalAmbient, diffuse.a);
+		
+	// ƒелаем lightToPixelVec единичным вектором, описыва€ направление пикселей по отношению позиции света
+	lightToPixelVec /= d; 
+	
+	// ”знаем интенсивность света в зависимости от угла к поверхности
+	float howMuchLight = dot(lightToPixelVec, input.Norm);
+
+	// ≈сли свет на передней поверхности
+	if( howMuchLight > 0.0f )
+	{	
+		// ƒобавл€ем освещение к finalColor
+		finalColor += howMuchLight * diffuse * light.diffuse;
+		
+		// ¬ычисл€ем фактор затухани€
+		finalColor /= light.att[0] + (light.att[1] * d) + (light.att[2] * (d*d));
+		
+		//¬ычисл€ем фактор затухани€ от вершины то основани€ конуса света
+		finalColor *= pow(max(dot(-lightToPixelVec, light.dir), 0.0f), light.cone);
+	}	
+        
+	// ”беждаемс€, что результат от 1 до 0, и добавл€ем фоновое освещение 
+	finalColor = saturate(finalColor + finalAmbient);
+	
+	// возвращаем получившийс€ свет
+	return float4(finalColor, diffuse.a);
+}
