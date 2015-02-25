@@ -1,10 +1,10 @@
-Ћог создан: 02/25/15 16:51:53.
+Ћог создан: 02/25/15 22:11:16.
 
-16:51:53::85: *DEBUG: Window Create
-16:51:54::557: *DEBUG: (x: 5,000000, y: 5,100000, z: 2,000000)
-16:52:03::9847: *DEBUG: Window Close
-16:52:03::9848: *DEBUG: InputMgr close
-16:52:03::9919: *DEBUG: Scene Close
-16:52:03::9920: *DEBUG: Stepper Close
-16:52:03::9922: *ERROR: INVALID OPERATION: "Foundation destruction failed due to pending module references. Close/release all depending modules first." в ..\..\foundation\src\PsFoundation.cpp::195
-16:52:03::9927: *DEBUG: PhysX Close
+22:11:16::59: *DEBUG: Window Create
+22:11:16::374: *DEBUG: (x: 5,000000, y: 5,100000, z: 2,000000)
+22:11:17::1607: *DEBUG: Window Close
+22:11:17::1609: *DEBUG: InputMgr close
+22:11:17::1687: *DEBUG: Scene Close
+22:11:17::1688: *DEBUG: Stepper Close
+22:11:17::1690: *ERROR: INVALID OPERATION: "Foundation destruction failed due to pending module references. Close/release all depending modules first." в ..\..\foundation\src\PsFoundation.cpp::195
+22:11:17::1695: *DEBUG: PhysX Close

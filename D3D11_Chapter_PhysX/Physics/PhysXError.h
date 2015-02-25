@@ -1,7 +1,7 @@
 #pragma once
 
-#include "DefHeaders.h"
-#include "Log.h"
+#include "..\DefHeaders.h"
+#include "..\Util\Log.h"
 
 using namespace physx;
 

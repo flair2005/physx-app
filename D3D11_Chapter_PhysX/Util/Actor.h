@@ -1,7 +1,7 @@
 #pragma once
 
-#include "DefHeaders.h"
-#include "Physics.h"
+#include "..\DefHeaders.h"
+#include "..\Physics\Physics.h"
 
 using namespace physx;
 

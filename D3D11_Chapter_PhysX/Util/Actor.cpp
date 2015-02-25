@@ -23,7 +23,6 @@ void Actor::destroy() {
 	m_pActor->detachShape(*m_pShape);
 	m_pMaterial->release();
 	m_pActor->release();
-	//m_pShape->release();
 	m_pActor = nullptr;
 	m_pShape = nullptr;
 	m_pMaterial = nullptr;

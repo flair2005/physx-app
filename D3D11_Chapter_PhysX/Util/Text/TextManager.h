@@ -1,8 +1,8 @@
 #pragma once
 
-#include "DefHeaders.h"
+#include "..\..\DefHeaders.h"
 #include "Text.h"
-#include "Render.h"
+#include "..\..\Render\Render.h"
 #include "BitmapFont.h"
 
 class TextManager {

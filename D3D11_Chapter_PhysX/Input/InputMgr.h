@@ -1,8 +1,9 @@
 #pragma once
 
-#include "InputCodes.h"
-#include "Log.h"
-#include "InputListener.h"
+#include "..\Common\InputCodes.h"
+#include "..\Util\Log.h"
+#include "..\Input\InputListener.h"
+#include "..\DefHeaders.h"
 
 
 	class InputMgr {

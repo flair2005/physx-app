@@ -1,15 +1,15 @@
 #pragma once
 
-#include "Window.h"
-#include "Render.h"
-#include "Log.h"
-#include "InputMgr.h"
-#include "InputListener.h"
+#include "..\Render\Window.h"
+#include "..\Render\Render.h"
+#include "..\Util\Log.h"
+#include "..\Input\InputMgr.h"
+#include "..\Input\InputListener.h"
 #include "Stepper.h"
-#include "Physics.h"
-#include "Scene.h"
-#include "Fps.h"
-#include "TextManager.h"
+#include "..\Physics\Physics.h"
+#include "..\Physics\Scene.h"
+#include "..\Util\Fps.h"
+#include "..\Util\Text\TextManager.h"
 
 class Framework {
 protected:

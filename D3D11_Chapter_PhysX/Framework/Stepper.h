@@ -1,9 +1,9 @@
 #pragma once
 
-#include "DefHeaders.h"
-#include "Render.h"
-#include "Physics.h"
-#include "Scene.h"
+#include "..\DefHeaders.h"
+#include "..\Render\Render.h"
+#include "..\Physics\Physics.h"
+#include "..\Physics\Scene.h"
 
 class Stepper {
 private:

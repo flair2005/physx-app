@@ -67,11 +67,24 @@ bool Physics::init(Render* pRender) {
 
 void Physics::Close() {
 	//Сперва освобождаются зависимые от Foundation ресурсы
-	m_pPhysX->release();
-	m_pCooking->release();
+	m_pError = nullptr;
 
-	//m_pProfileZoneManager->release();
-	m_pFoundation->release();
+	if(m_pPhysX) {
+		m_pPhysX->release();
+	}
+	if(m_pCooking) {
+		m_pCooking->release();
+	}
+
+	if(m_pProfileZoneManager) {
+		m_pProfileZoneManager->release();
+	}
+
+	m_pAllocator = nullptr;
+
+	if(m_pFoundation) {
+		m_pFoundation->release();
+	}
 	
 	m_pPhysX = nullptr;
 	m_pProfileZoneManager = nullptr;

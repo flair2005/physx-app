@@ -1,6 +1,7 @@
 #pragma once
 
-#include "InputMgr.h"
+#include "..\Input\InputMgr.h"
+class Framework;
 
 	struct DescWindow {
 		DescWindow() : 

@@ -1,7 +1,7 @@
 #include "Render.h"
 #include "Shader.h"
-#include "Scene.h"
-#include "Buffer.h"
+#include "..\Physics\Scene.h"
+#include "..\Util\Buffer.h"
 
 /*
 
@@ -15,11 +15,6 @@
 	   Direct3D мог их использовать;
 	6. Установите вьюпорт (viewport).
 
-*/
-
-/*struct SimpleVertex {
-	XMFLOAT3 Pos;
-};
 */
 
 struct cbMatrixData {
@@ -267,14 +262,14 @@ bool Render::init() {
 		return false;
 	}
 
-	if(!m_pShader->loadTexture(L"image.png")) {
+	if(!m_pShader->loadTexture(L"Res\\image.png")) {
 		return false;
 	}
 
 	m_pShader->addInputElementDesc("POSITION", DXGI_FORMAT_R32G32B32_FLOAT);
 	m_pShader->addInputElementDesc("TEXCOORD", DXGI_FORMAT_R32G32_FLOAT);
 	m_pShader->addInputElementDesc("NORMAL", DXGI_FORMAT_R32G32B32_FLOAT);
-	if(!m_pShader->createShader(L"pointlight.vs", L"pointlight.ps")) {
+	if(!m_pShader->createShader(L"Shaders\\pointlight.vs", L"Shaders\\pointlight.ps")) {
 		return false;
 	}
 	

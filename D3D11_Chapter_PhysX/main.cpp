@@ -1,5 +1,4 @@
-#include "Framework.h"
-#include "NewRender.h"
+#include "Framework\Framework.h"
 
 int main() {
 	Framework framework;

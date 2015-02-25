@@ -97,11 +97,10 @@
 			return false;
 		}
 
-		
 		m_scene->addActors();
 
 		m_textManager = new TextManager(m_render);
-		if(!m_textManager->addFont("key_fps_caption", "2.fnt")) {
+		if(!m_textManager->addFont("key_fps_caption", "Res\\2.fnt")) {
 			Log::get()->err("Font Create Failed");
 			return false;
 		}
@@ -137,7 +136,9 @@
 
 		//m_scene->updateActors()
 		m_textManager->setDynamicText("key_fps_count", m_fps->getFpsStr());
+
 		m_textManager->drawText();
+
 		if(!m_render->draw(dt)) {
 			return false;
 		}

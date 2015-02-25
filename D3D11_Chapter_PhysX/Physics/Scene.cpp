@@ -98,11 +98,24 @@ void Scene::Close() {
 		m_actorsList.front()->destroy();
 	}
 	m_actorsList.clear();
-	m_pScene->release();
-	m_pCudaContextManager->release();
-	m_pCpuDispatcher = nullptr;
+
+	if(m_pScene) {
+		m_pScene->release();
+	}
+
+	if(m_pCudaContextManager) {
+		m_pCudaContextManager->release();
+	}
+
+	if(m_planeMaterial) {
+		m_planeMaterial->release();
+	}
+
+	delete m_pCpuDispatcher;
+
 	m_pCudaContextManager = nullptr;
 	m_pScene = nullptr;
+
 	Log::get()->debug("Scene Close");
 }
 

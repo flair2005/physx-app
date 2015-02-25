@@ -1,13 +1,11 @@
 #pragma once
 
-#include "DefHeaders.h"
-#include "macros.h"
-#include "Log.h"
-#include "Fps.h"
+#include "..\DefHeaders.h"
+#include "..\Common\macros.h"
+#include "..\Util\Log.h"
+#include "..\Util\Fps.h"
 
 class Shader;
-class BitmapFont;
-class Text;
 
 using namespace physx;
 

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "DefHeaders.h"
-#include "PhysXError.h"
-#include "Physics.h"
-#include "Actor.h"
+#include "..\DefHeaders.h"
+#include "..\Physics\PhysXError.h"
+#include "..\Physics\Physics.h"
+#include "..\Util\Actor.h"
 
 class Scene : public PxSimulationEventCallback {
 private:
