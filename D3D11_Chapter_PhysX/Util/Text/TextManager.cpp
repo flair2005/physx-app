@@ -2,7 +2,7 @@
 
 TextManager::TextManager(Render* pRender) {
 	if(!pRender) {
-		Log::get()->err("pRender == nullptr int TextManager(Render* pRender)");
+		Log::get()->err("pRender == nullptr in TextManager(Render* pRender)");
 		return;
 	}
 	m_pRender = pRender;
@@ -91,7 +91,7 @@ void TextManager::drawText() {
 		return;
 	}
 	m_pRender->turnOnAlphaBlending();						//Включаем прозрачность
-	std::unordered_map<std::string, StaticTextContainer>::pointer ps;
+	std::unordered_map<std::string, StaticTextContainer>::pointer ps;	//По этому указателю будем перебирать все объекты
 	for(std::unordered_map<std::string, StaticTextContainer>::iterator it = staticTextMap.begin();
 				it != staticTextMap.end(); it++) {
 		ps = &*it;
@@ -103,26 +103,13 @@ void TextManager::drawText() {
 		return;
 	}
 	m_pRender->turnOnAlphaBlending();						//Включаем прозрачность
-	std::unordered_map<std::string, DynamicTextContainer>::pointer pd;
+	std::unordered_map<std::string, DynamicTextContainer>::pointer pd;	//По этому указателю будем перебирать все объекты
 	for(std::unordered_map<std::string, DynamicTextContainer>::iterator it = dynamicTextMap.begin();
 				it != dynamicTextMap.end(); it++) {
 		pd = &*it;
 		pd->second.text->draw(pd->second.r, pd->second.g, pd->second.b, pd->second.x, pd->second.y);
 	}
 	m_pRender->turnOffAlphaBlending();						//Выключаем прозрачность
-
-
-	//m_pText1->setText(m_pFps->getFpsStr());				//Выводим количество фпс
-//	m_pText1->draw(1.0f, 1.0f, 0.0f, 80.0f, 10.0f);
-
-	//Text* pr = staticTextMap
-
-	//m_pText2->draw(1.0f, 1.0f, 0.0f, 10.0f, 10.f);		//Статическая надпись "FPS:"
-
-	//m_pText3->draw(0.0f, 1.0f, 0.0f, 10.0f, 40.0f);
-
-	//m_pText4->setText(m_pScene->getActorPos());
-	//m_pText4->draw(0.0f, 1.0f, 0.0f, 160.0f, 40.0f);
 }
 
 void TextManager::setDynamicText(std::string key, std::wstring text) {
@@ -130,7 +117,6 @@ void TextManager::setDynamicText(std::string key, std::wstring text) {
 		Log::get()->err("DynamicText with Key \"%s\" is not found in setDynamicText(...)", key);
 		return;
 	}
-
 	dynamicTextMap.at(key).text->setText(text);
 }
 

@@ -8,7 +8,7 @@ using namespace physx;
 
 class Physics {
 private:
-	PxFoundation* m_pFoundation;
+	PxFoundation* m_pFoundation;	//Основа для создания объектов PhysX
 	PxPhysics* m_pPhysX;
 	PxErrorCallback* m_pError;	//Используется для оповещения об ошибках, 
 								//принимает код ошибки из структуры PxErrorCode, сообщение, имя файла (__FILE) и строку (__LINE__).
@@ -28,8 +28,6 @@ public:
 	PxFoundation* getFoundation()						{ if(isInit) return m_pFoundation;			}
 	PxErrorCallback* getErrorCallback()					{ if(isInit) return m_pError;				}
 	Render* getRender()									{ if(isInit) return m_pRender;				}						
-
-	//Scene* getScene()									{ if(isInit) return m_pScene; }
 
 	void Close();
 };

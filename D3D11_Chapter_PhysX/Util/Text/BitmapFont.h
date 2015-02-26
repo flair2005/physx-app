@@ -5,6 +5,13 @@
 #include "..\..\Render\Shader.h"
 #include "..\..\Util\Buffer.h"
 
+/*
+	Отвечает за создание и использование шрифтов
+	Для создания объекта шрифта требуется файл в формате .fnt, который создается, например, программой BMFont
+	К файлу *.fnt прилагается текстура *_0(1, 2, 3...).png
+	From DirectX11 Tutorial @ zeswarchief
+*/
+
 struct VertexFont {
 	XMFLOAT3 pos;
 	XMFLOAT2 tex;

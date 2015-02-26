@@ -3,6 +3,11 @@
 #include "..\DefHeaders.h"
 #include "Render.h"
 
+/* 
+	Вспомогательный класс, упрощающий создание шейдеров в программе
+	From Direct11 Tutorial @ zeswarchief
+*/
+
 class Shader {
 private:
 	HRESULT m_compileShaderFromFile(WCHAR* fileName, LPCSTR entryPoint, LPCSTR shaderModel, ID3DBlob** ppBlobOut);

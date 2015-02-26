@@ -23,6 +23,7 @@ int Fps::getFps() {
 	return m_fps;
 }
 
+//Вывод текста требует объект std::wstring
 std::wstring Fps::getFpsStr() {
 	return fpsStr;
 }

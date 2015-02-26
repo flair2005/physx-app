@@ -17,6 +17,7 @@ class Render {
 		void m_initMatrix();
 		void m_resize();
 
+		//Указатели на интерфейсы DirectX11
 		ID3D11Device *m_pd3dDevice;
 		ID3D11DeviceContext *m_pImmediateContext;
 		IDXGISwapChain *m_pSwapChain;
@@ -60,16 +61,14 @@ class Render {
 		XMMATRIX getOrtho()							{ return m_ortho;				}
 		XMMATRIX getProjection()					{ return m_projection;			}
 
-		//virtual bool init(HWND hwnd);
-		virtual bool init();
-		virtual bool draw(PxReal dt);
-		//virtual void setFpsClass(Fps* pFps) { if(pFps) m_pFps = pFps; }
-		//virtual void Close();
+		bool init();
+		bool draw(PxReal dt);
 
 		void turnZBufferOn();
 		void turnZBufferOff();
 
-		void turnOnAlphaBlending();
+		//Вызываются, когда нужно отрендерить текст
+		void turnOnAlphaBlending();					
 		void turnOffAlphaBlending();
 
 		void* operator new(size_t i)				{ return _aligned_malloc(i, 16);	}

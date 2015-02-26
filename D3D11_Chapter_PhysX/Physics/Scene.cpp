@@ -13,14 +13,13 @@ Scene::Scene() {
 Scene::~Scene() {
 
 }
-//PxPhysics* pPhysX, PxFoundation* pFoundation, PxProfileZoneManager* pProfileZoneManager, 
-//PxErrorCallback* pError, ID3D11Device* pd3dDevice
+
 bool Scene::initScene(Physics* pPhysics) {
 	m_pPhysics = pPhysics;
 	
 	PxSceneDesc sceneDesc(m_pPhysics->getPxPhysics()->getTolerancesScale());
 
-	sceneDesc.gravity = PxVec3(0.0f, -9.81f, 0.0f);
+	sceneDesc.gravity = PxVec3(0.0f, -9.81f, 0.0f);		//Ставим гравитацию на сцене
 	customizeSceneDesc(sceneDesc);
 
 	if(!sceneDesc.cpuDispatcher) {
@@ -68,7 +67,8 @@ bool Scene::initScene(Physics* pPhysics) {
 
 void Scene::customizeSceneDesc(PxSceneDesc& sceneDesc) {
 	sceneDesc.filterShader = defaultFilterShader;
-	sceneDesc.simulationEventCallback = this;
+	sceneDesc.simulationEventCallback = this;		//Говорим физиксу, что в этом классе находятся методы, нужные
+													//для определения поведения при событиях (коллизия, триггер)
 }
 
 PxFilterFlags Scene::defaultFilterShader(	
@@ -123,6 +123,8 @@ void Scene::onContact(const PxContactPairHeader& pairHeader, const PxContactPair
 	for(PxU32 i=0; i < nbPairs; i++) {
 		const PxContactPair& cp = pairs[i];
 
+		//Здесь будет описано поведение объектов при коллизии
+		//Пока что я просто хочу знать, что это-таки случилось
 		if(cp.events & PxPairFlag::eNOTIFY_TOUCH_FOUND)
 		{
 			//if((pairHeader.actors[0] == mSubmarineActor) || (pairHeader.actors[1] == mSubmarineActor))
@@ -141,24 +143,28 @@ void Scene::onContact(const PxContactPairHeader& pairHeader, const PxContactPair
 }
 
 bool Scene::createActors() {
-	PxVec3 position;
+	PxVec3 position;		//Начальная позиция актера
 	position.x = 5.0f;
 	position.y = 5.1f;
 	position.z = 2.0f;
-	PxVec3 velocity;
+	PxVec3 velocity;		//Скорость
 	velocity.x = 0.01f;
 	velocity.y = 0.0f;
 	velocity.z = 0.0f;
 	Actor* simpleActor = new Actor();
 	simpleActor->constructActor(m_pPhysics, m_pPhysics->getPxPhysics()->createMaterial(0.5f, 0.5f, 0.1f), 
 									position, 1.0f, velocity, 10.2f, 10.2f, 10.2f);
-	simpleActor->engage();
-	m_actorsList.push_front(simpleActor);
+	simpleActor->engage();	//"Включаем" этого актера
+	m_actorsList.push_front(simpleActor);	//И добавляем его в список актеров
 
 	return true;
 }
 
+//Создаем Plane по умолчанию
+//В этом случае просто вызываем отсюда createPlane с параметрами
 bool Scene::createPlane() {
+	//Опытным путем было установлено, что возможны только два значения для Plane:
+	//(1.0f; 0.0f; 0.0f) и (0.0f; 1.0f; 0.0f)
 	PxVec3 pos;
 	pos.x = 0.0f;
 	pos.y = 1.0f;
@@ -185,10 +191,11 @@ bool Scene::createPlane(PxVec3 pos, PxMaterial* material) {
 	return true;
 }
 
+//Отдаем актеров из списка сцене, чтобы она могла ими управлять
 void Scene::addActors() {
 	m_pScene->addActor(*m_plane);
 
-	
+	//Исключительный случай, когда в списке только 1 актер
 	if(m_actorsList.size() == 1) {
 		m_pScene->addActor(*(m_actorsList.front()->getActor()));
 		Log::get()->debug("(x: %f, y: %f, z: %f)", m_actorsList.front()->getPosition().x, m_actorsList.front()->getPosition().y,
@@ -205,6 +212,7 @@ void Scene::addActors() {
 	}
 }
 
+//Убрать!
 std::wstring Scene::getActorPos() {
 	
 	wchar_t tmp[255];

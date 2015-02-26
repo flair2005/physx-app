@@ -22,7 +22,7 @@ bool Physics::init(Render* pRender) {
 	m_pRender = pRender;
 
 	//Создание Foundation
-	m_pError = new PhysXError();					
+	m_pError = new PhysXError();			//Почему не использовать Log::get()? PhysXError используется как callback самим физиксом			
 	m_pAllocator = new PxDefaultAllocator();
 	m_pFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, *m_pAllocator, *m_pError);
 	if(!m_pFoundation) {
@@ -30,7 +30,6 @@ bool Physics::init(Render* pRender) {
 		return false;
 	}
 	
-	//Опционально: performance profiling capabilities of the PhysX Visual Debugger (что?)
 	m_pProfileZoneManager = &PxProfileZoneManager::createProfileZoneManager(m_pFoundation);
 	if(!m_pProfileZoneManager) {
 		m_pError->reportError(PxErrorCode::eABORT, "ProfileZoneManager Create Fail", __FILE__, __LINE__);
@@ -45,14 +44,14 @@ bool Physics::init(Render* pRender) {
 		return false;
 	}
 
-	//Опционально: запускаем Cooking
+	//запускаем Cooking
 	m_pCooking = PxCreateCooking(PX_PHYSICS_VERSION, *m_pFoundation, PxCookingParams(PxTolerancesScale()));
 	if(!m_pCooking) {
 		m_pError->reportError(PxErrorCode::eABORT, "Cooking Create Fail", __FILE__, __LINE__);
 		return false;
 	}
 
-	//Опционально: запускаем Расширения
+	//запускаем Расширения
 	if(!PxInitExtensions(*m_pPhysX)) {
 		m_pError->reportError(PxErrorCode::eABORT, "Extentions Create Fail", __FILE__, __LINE__);
 		return false;
@@ -82,7 +81,7 @@ void Physics::Close() {
 
 	m_pAllocator = nullptr;
 
-	if(m_pFoundation) {
+	if(m_pFoundation) {				//Но почему-то не все освобождается и Foundation ругается на это. FIXME!
 		m_pFoundation->release();
 	}
 	

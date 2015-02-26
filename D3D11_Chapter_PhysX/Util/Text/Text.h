@@ -3,6 +3,13 @@
 #include "..\..\DefHeaders.h"
 #include "BitmapFont.h"
 
+/*
+	Отвечает за хранение и рендеринг текста
+	Может быть статическим или динамическим
+	TODO: динамический текст наследуется от базового Text, являющимся статическим
+	From DirectX11 Tutorial @ zeswarchief
+*/
+
 class Text {
 private:
 	bool m_initBuffers(const std::wstring& text);

@@ -5,6 +5,10 @@
 #include "..\Physics\Physics.h"
 #include "..\Physics\Scene.h"
 
+
+/*
+	Пока что все, что Stepper делает - вызывает метод PxScene::simulate() 
+*/
 class Stepper {
 private:
 	Scene* m_pScene;
