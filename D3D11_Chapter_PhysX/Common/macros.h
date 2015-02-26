@@ -6,4 +6,4 @@
 #define _CLOSE(p)			{ if(p){(p)->Close(); delete (p); p = nullptr;} }
 
 
-#define _VERSION_FRAMEWORK 5
+#define _VERSION 0.01
