@@ -151,11 +151,11 @@ bool Scene::createActors() {
 	velocity.x = 0.01f;
 	velocity.y = 0.0f;
 	velocity.z = 0.0f;
-	Actor* simpleActor = new Actor();
-	simpleActor->constructActor(m_pPhysics, m_pPhysics->getPxPhysics()->createMaterial(0.5f, 0.5f, 0.1f), 
-									position, 1.0f, velocity, 10.2f, 10.2f, 10.2f);
-	simpleActor->engage();	//"Включаем" этого актера
-	m_actorsList.push_front(simpleActor);	//И добавляем его в список актеров
+	Box* simpleBox = new Box(2.0f, 2.0f, 2.0f);
+	simpleBox->create(m_pPhysics, m_pPhysics->getPxPhysics()->createMaterial(0.5f, 0.5f, 0.1f), 
+									position, 1.0f, velocity);
+	simpleBox->engage();	//"Включаем" этого актера
+	m_actorsList.push_front(simpleBox);	//И добавляем его в список актеров
 
 	return true;
 }
@@ -203,7 +203,7 @@ void Scene::addActors() {
 		return;
 	}
 
-	Actor* pr;
+	Object* pr;
 	for(pr = m_actorsList.front(); pr != m_actorsList.back(); pr++) {
 		m_pScene->addActor(*(pr->getActor()));
 		Log::get()->debug("(x: %f, y: %f, z: %f)", m_actorsList.front()->getPosition().x, m_actorsList.front()->getPosition().y,

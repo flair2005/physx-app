@@ -1,8 +1,8 @@
 #pragma once
 
-#include "..\DefHeaders.h"
-#include "..\Physics\PhysXError.h"
-#include "..\Render\Render.h"
+#include "DefHeaders.h"
+#include "PhysXError.h"
+#include "Render.h"
 
 using namespace physx;
 

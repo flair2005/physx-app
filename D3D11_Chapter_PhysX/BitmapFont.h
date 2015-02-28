@@ -1,9 +1,9 @@
 #pragma once
 
-#include "..\..\DefHeaders.h"
-#include "..\..\Render\Render.h"
-#include "..\..\Render\Shader.h"
-#include "..\..\Util\Buffer.h"
+#include "DefHeaders.h"
+#include "Render.h"
+#include "Shader.h"
+#include "Buffer.h"
 
 /*
 	Отвечает за создание и использование шрифтов

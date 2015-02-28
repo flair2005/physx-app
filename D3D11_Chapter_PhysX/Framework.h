@@ -1,15 +1,16 @@
 #pragma once
 
-#include "..\Render\Window.h"
-#include "..\Render\Render.h"
-#include "..\Util\Log.h"
-#include "..\Input\InputMgr.h"
-#include "..\Input\InputListener.h"
+#include "Window.h"
+#include "Render.h"
+#include "Log.h"
+#include "InputMgr.h"
+#include "InputListener.h"
 #include "Stepper.h"
-#include "..\Physics\Physics.h"
-#include "..\Physics\Scene.h"
-#include "..\Util\Fps.h"
-#include "..\Util\Text\TextManager.h"
+#include "Physics.h"
+#include "Scene.h"
+#include "Fps.h"
+#include "TextManager.h"
+#include "ObjectManager.h"
 
 /*
 	Основной класс, отвечающий за действия всех остальных классов. В нем содержатся экземпляры всех основных классов.
@@ -36,6 +37,8 @@ protected:
 	Scene* m_scene;				//Описывает происходящее с точки зрения физических процессов.
 	TextManager* m_textManager;	//Вся работа с текстом лежит на этом классе. Создает шрифты, тексты и рендерит их.
 	Fps* m_fps;					//Вспомогательный класс; считает количество кадров в секунду и отдает их ТекстМенеджеру на отрисовку
+	ObjectManager* m_objectManager;	//Управляет всеми объектами; в объекты включены данные о вершинах и индексах, а также 
+									//представление объекта (PxRigidBody) для физикса
 
 	bool m_init;
 	bool m_isRunning;			//true во время работы; false - если поступает сигнал о выходе -> приложение закрывается

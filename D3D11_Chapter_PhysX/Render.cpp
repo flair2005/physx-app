@@ -1,7 +1,8 @@
 #include "Render.h"
 #include "Shader.h"
-#include "..\Physics\Scene.h"
-#include "..\Util\Buffer.h"
+#include "Scene.h"
+#include "Buffer.h"
+#include "ObjectManager.h"
 
 /*
 
@@ -20,15 +21,6 @@
 struct cbMatrixData {
 	XMMATRIX WVP;
 	XMMATRIX world;
-};
-
-struct Vertex {
-	Vertex(float x, float y, float z, float u, float v, float nx, float ny, float nz) : pos(x, y, z), 
-																						tex(u, v),
-																						normal(nx, ny, nz) {}
-	XMFLOAT3 pos;
-	XMFLOAT2 tex;
-	XMFLOAT3 normal;
 };
 
 struct Light {
@@ -272,66 +264,11 @@ bool Render::init() {
 	if(!m_pShader->createShader(L"Shaders\\pointlight.vs", L"Shaders\\pointlight.ps")) {
 		return false;
 	}
-	
-	Vertex v[] = {
-		Vertex(-1.0f, -1.0f, -1.0f, 0.0f, 1.0f, -1.0f, -1.0f, -1.0f),
-		Vertex(-1.0f,  1.0f, -1.0f, 0.0f, 0.0f, -1.0f,  1.0f, -1.0f),
-		Vertex( 1.0f,  1.0f, -1.0f, 1.0f, 0.0f,  1.0f,  1.0f, -1.0f),
-		Vertex( 1.0f, -1.0f, -1.0f, 1.0f, 1.0f,  1.0f, -1.0f, -1.0f),
-
-		Vertex(-1.0f, -1.0f, 1.0f, 1.0f, 1.0f, -1.0f, -1.0f, 1.0f),
-		Vertex( 1.0f, -1.0f, 1.0f, 0.0f, 1.0f,  1.0f, -1.0f, 1.0f),
-		Vertex( 1.0f,  1.0f, 1.0f, 0.0f, 0.0f,  1.0f,  1.0f, 1.0f),
-		Vertex(-1.0f,  1.0f, 1.0f, 1.0f, 0.0f, -1.0f,  1.0f, 1.0f),
-
-		Vertex(-1.0f, 1.0f, -1.0f, 0.0f, 1.0f,-1.0f, 1.0f, -1.0f),
-		Vertex(-1.0f, 1.0f,  1.0f, 0.0f, 0.0f,-1.0f, 1.0f,  1.0f),
-		Vertex( 1.0f, 1.0f,  1.0f, 1.0f, 0.0f, 1.0f, 1.0f,  1.0f),
-		Vertex( 1.0f, 1.0f, -1.0f, 1.0f, 1.0f, 1.0f, 1.0f, -1.0f),
-
-		Vertex(-1.0f, -1.0f, -1.0f, 1.0f, 1.0f,-1.0f, -1.0f, -1.0f),
-		Vertex( 1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 1.0f, -1.0f, -1.0f),
-		Vertex( 1.0f, -1.0f,  1.0f, 0.0f, 0.0f, 1.0f, -1.0f,  1.0f),
-		Vertex(-1.0f, -1.0f,  1.0f, 1.0f, 0.0f,-1.0f, -1.0f,  1.0f),
-
-		Vertex(-1.0f, -1.0f,  1.0f, 0.0f, 1.0f,-1.0f, -1.0f,  1.0f),
-		Vertex(-1.0f,  1.0f,  1.0f, 0.0f, 0.0f,-1.0f,  1.0f,  1.0f),
-		Vertex(-1.0f,  1.0f, -1.0f, 1.0f, 0.0f,-1.0f,  1.0f, -1.0f),
-		Vertex(-1.0f, -1.0f, -1.0f, 1.0f, 1.0f,-1.0f, -1.0f, -1.0f),
-
-		Vertex( 1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 1.0f, -1.0f, -1.0f),
-		Vertex( 1.0f,  1.0f, -1.0f, 0.0f, 0.0f, 1.0f,  1.0f, -1.0f),
-		Vertex( 1.0f,  1.0f,  1.0f, 1.0f, 0.0f, 1.0f,  1.0f,  1.0f),
-		Vertex( 1.0f, -1.0f,  1.0f, 1.0f, 1.0f, 1.0f, -1.0f,  1.0f),
-	};
-
-	DWORD indices[] = {
-		0, 1, 2,
-		0, 2, 3,
-
-		4, 5, 6,
-		4, 6, 7,
-		
-		8, 9, 10,
-		8, 10, 11,
-
-		12, 13, 14,
-		12, 14, 15,
-
-		16, 17, 18,
-		16, 18, 19,
-
-		20, 21, 22,
-		20, 22, 23
-	};
-
-	m_pIndexBuffer = Buffer::createIndexBuffer(m_pd3dDevice, sizeof(DWORD)*36, false, indices);
-	m_pVertBuffer = Buffer::createVertexBuffer(m_pd3dDevice, sizeof(Vertex)*24, false, v);
 
 	m_pConstMatrixBuffer = Buffer::createConstantBuffer(m_pd3dDevice, sizeof(cbMatrixData), false);
 	m_pConstLightBuffer = Buffer::createConstantBuffer(m_pd3dDevice, sizeof(cbLightData), false);
 
-	XMVECTOR camPosition = XMVectorSet(0.0f, 0.0f, -70.0f, 0.0f);
+	XMVECTOR camPosition = XMVectorSet(0.0f, 0.0f, -20.0f, 0.0f);
 	XMVECTOR camTarget = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
 	XMVECTOR camUp = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 	camView = XMMatrixLookAtLH(camPosition, camTarget, camUp);
@@ -347,6 +284,13 @@ bool Render::init() {
 	return true;
 }
 
+bool Render::initObjects(ObjectManager* objectManager) {
+
+	m_pIndexBuffer = Buffer::createIndexBuffer(m_pd3dDevice, sizeof(DWORD)*objectManager->totalIndices(), false, objectManager->getIndices());
+	m_pVertBuffer = Buffer::createVertexBuffer(m_pd3dDevice, sizeof(Vertex)*objectManager->totalVertices(), false, objectManager->getVertices());
+
+	return true;
+}
 
 bool Render::draw(PxReal dt) {
 
@@ -371,7 +315,7 @@ bool Render::draw(PxReal dt) {
 	XMMATRIX cube1World = XMMatrixIdentity();
 	//XMMATRIX translation = XMMatrixTranslation(m_pScene->getActorPosVec().x, m_pScene->getActorPosVec().y, m_pScene->getActorPosVec().z);
 	//cube1World = translation;
-	cube1World = XMMatrixTranslation(0.0f, 10.0f, 0.0f);
+	cube1World = XMMatrixTranslation(0.0f, 5.0f, 0.0f);
 	XMMATRIX WVP = cube1World * camView * m_projection;
 	cbMatrixData cbMat;
 	cbMat.world = XMMatrixTranspose(cube1World);

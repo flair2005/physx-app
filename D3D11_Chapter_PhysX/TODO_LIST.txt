@@ -1,7 +1,7 @@
 TODO @ 26.02.15/v0.01:
 
 I.
-- POPULATE CODE WITH COMMENTS!
+- POPULATE CODE WITH COMMENTS! - done @ 26.02.15
 - Актеры (Объекты?) хранятся в коллекции (ActorManager? ObjectManager?), их позиции обновляются после каждого фрейма;
 - Создать класс, который наследуется от PxSimulationEventCallback, и переопределить его методы, чтобы убрать задачу определения реакции
 на события (коллизия, триггер...) с Scene;

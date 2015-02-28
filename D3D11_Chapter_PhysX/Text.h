@@ -1,6 +1,6 @@
 #pragma once
 
-#include "..\..\DefHeaders.h"
+#include "DefHeaders.h"
 #include "BitmapFont.h"
 
 /*

@@ -1,10 +1,10 @@
 #pragma once
 
-#include "..\DefHeaders.h"
-#include "..\Physics\PhysXError.h"
-#include "..\Physics\Physics.h"
-#include "..\Util\Actor.h"
-
+#include "DefHeaders.h"
+#include "PhysXError.h"
+#include "Physics.h"
+#include "Object.h"
+#include "Box.h"
 /*
 	Scene определяет поведение отслеживаемых объектов, называемых актерами (Actor), их реакцию на различные события
 	Наследуется от PxSimulationEventCallback, чтобы можно было определить реакцию актеров.
@@ -31,7 +31,7 @@ private:
 	PxFilterObjectAttributes attributes1, PxFilterData filterData1,
 	PxPairFlags& pairFlags, const void* constantBlock, PxU32 constantBlockSize);
 
-	std::list<Actor*> m_actorsList;			//Список отслеживаемых актеров. Самое место ему в ObjectManager
+	std::list<Object*> m_actorsList;			//Список отслеживаемых актеров. Самое место ему в ObjectManager
 
 	bool isInit;
 
@@ -60,7 +60,7 @@ public:
 	bool createPlane(PxVec3 pos, PxMaterial* material);		//Либо можно самому задать ее параметры
 
 	std::wstring getActorPos();				//Вот это надо убрать. Костыль обыкновенный для передачи позиции в Text
-	PxVec3 getActorPosVec()		{ return m_actorsList.back()->getActor()->getGlobalPose().p; }	//То же самое для рендера
+	//PxVec3 getActorPosVec()		{ return m_actorsList.back()->getActor()->getGlobalPose().p; }	//То же самое для рендера
 
 	void Close();
 };

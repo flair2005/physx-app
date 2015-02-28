@@ -1,5 +1,5 @@
 #include "Window.h"
-#include "..\Framework\Framework.h"
+#include "Framework.h"
 
 Window* Window::m_wndthis = nullptr;
 

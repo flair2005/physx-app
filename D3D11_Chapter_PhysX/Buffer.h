@@ -1,6 +1,6 @@
 #pragma once
 
-#include "..\DefHeaders.h"
+#include "DefHeaders.h"
 
 /*
 	Вспомогательный класс, упрощающий создание буферов для DirectX11

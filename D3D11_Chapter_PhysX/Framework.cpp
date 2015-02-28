@@ -8,6 +8,7 @@ Framework::Framework() :
 			m_stepper(nullptr),
 			m_textManager(nullptr),
 			m_fps(nullptr),
+			m_objectManager(nullptr),
 			m_init(false),
 			m_isRunning(false) {
 				
@@ -35,6 +36,7 @@ bool Framework::init() {
 	m_scene = new Scene();
 	m_stepper = new Stepper();
 	m_fps = new Fps();
+	m_objectManager = new ObjectManager();
 
 	m_fps->init();
 	startTime = GetTickCount();
@@ -53,9 +55,10 @@ bool Framework::init() {
 	m_wnd->setInputMgr(m_input);
 
 	if(!m_render->createDevice(m_wnd->getHWND())) {
-		Log::get()->err("Не удалось создать рендер");
+		Log::get()->err("Не удалось создать устройство");
 		return false;
 	}
+
 
 	if(!m_physics->init(m_render)) {
 		Log::get()->err("Не удалось создать PhysX");
@@ -82,16 +85,32 @@ bool Framework::init() {
 		return false;
 	}
 
-	m_scene->addActors();
-
 	m_textManager = new TextManager(m_render);
 	if(!m_textManager->addFont("key_fps_caption", "Res\\2.fnt")) {
 		Log::get()->err("Font Create Failed");
 		return false;
 	}
+	
+	
+	//Temporary use of ObjectManager
+	if(!m_objectManager->addBox("box1", m_physics, m_physics->getPxPhysics()->createMaterial(0.5f, 0.5f, 0.1f),
+													PxVec3(0.0f, 0.0f, 0.0f), 0.8f, PxVec3(0.0f, 0.1f, 0.0f))) {
+		return false;
+	}
+	m_objectManager->engageObject("box1");
+
+	if(!m_render->initObjects(m_objectManager)) {
+		Log::get()->err("Не удалось инициализировать объекты в рендере");
+		return false;
+	}
 
 	m_textManager->addStaticText("key_fps_text", "key_fps_caption", L"FPS:", 1.0f, 1.0f, 0.0f, 10.0f, 10.0f);
 	m_textManager->addDynamicText("key_fps_count", "key_fps_caption", L"0", 1.0f, 1.0f, 0.0f, 80.0f, 10.0f, 8);
+	
+	m_scene->addActors();
+	
+	
+	
 
 	m_init = true;
 	return true;

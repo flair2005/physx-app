@@ -1,11 +1,12 @@
 #pragma once
 
-#include "..\DefHeaders.h"
-#include "..\Common\macros.h"
-#include "..\Util\Log.h"
-#include "..\Util\Fps.h"
+#include "DefHeaders.h"
+#include "macros.h"
+#include "Log.h"
+#include "Fps.h"
 
 class Shader;
+class ObjectManager;
 
 using namespace physx;
 
@@ -43,6 +44,8 @@ class Render {
 		Shader* m_pShader;
 
 		bool isInit;
+
+		
 	public:
 		Render();
 		virtual ~Render();
@@ -62,8 +65,10 @@ class Render {
 		XMMATRIX getProjection()					{ return m_projection;			}
 
 		bool init();
-		bool draw(PxReal dt);
+		bool initObjects(ObjectManager* objectManager);
 
+		bool draw(PxReal dt);
+		
 		void turnZBufferOn();
 		void turnZBufferOff();
 
