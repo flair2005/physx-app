@@ -45,7 +45,7 @@ class Render {
 
 		bool isInit;
 
-		
+		ObjectManager* m_pObjectManager;
 	public:
 		Render();
 		virtual ~Render();

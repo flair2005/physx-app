@@ -268,7 +268,7 @@ bool Render::init() {
 	m_pConstMatrixBuffer = Buffer::createConstantBuffer(m_pd3dDevice, sizeof(cbMatrixData), false);
 	m_pConstLightBuffer = Buffer::createConstantBuffer(m_pd3dDevice, sizeof(cbLightData), false);
 
-	XMVECTOR camPosition = XMVectorSet(0.0f, 0.0f, -20.0f, 0.0f);
+	XMVECTOR camPosition = XMVectorSet(0.0f, 0.0f, -8.0f, 0.0f);
 	XMVECTOR camTarget = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
 	XMVECTOR camUp = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 	camView = XMMatrixLookAtLH(camPosition, camTarget, camUp);
@@ -285,9 +285,11 @@ bool Render::init() {
 }
 
 bool Render::initObjects(ObjectManager* objectManager) {
-
-	m_pIndexBuffer = Buffer::createIndexBuffer(m_pd3dDevice, sizeof(DWORD)*objectManager->totalIndices(), false, objectManager->getIndices());
-	m_pVertBuffer = Buffer::createVertexBuffer(m_pd3dDevice, sizeof(Vertex)*objectManager->totalVertices(), false, objectManager->getVertices());
+	m_pObjectManager = objectManager;
+	m_pIndexBuffer = Buffer::createIndexBuffer(m_pd3dDevice, sizeof(DWORD)*m_pObjectManager->totalIndices(),
+																	false, m_pObjectManager->getIndices());
+	m_pVertBuffer = Buffer::createVertexBuffer(m_pd3dDevice, sizeof(Vertex)*m_pObjectManager->totalVertices(),
+																	false, m_pObjectManager->getVertices());
 
 	return true;
 }
@@ -312,20 +314,25 @@ bool Render::draw(PxReal dt) {
 	cblgh.light = light;
 	m_pImmediateContext->UpdateSubresource(m_pConstLightBuffer, 0 , NULL, &cblgh, 0, 0);
 	m_pImmediateContext->PSSetConstantBuffers(0, 1, &m_pConstLightBuffer);
-	XMMATRIX cube1World = XMMatrixIdentity();
-	//XMMATRIX translation = XMMatrixTranslation(m_pScene->getActorPosVec().x, m_pScene->getActorPosVec().y, m_pScene->getActorPosVec().z);
-	//cube1World = translation;
-	cube1World = XMMatrixTranslation(0.0f, 5.0f, 0.0f);
-	XMMATRIX WVP = cube1World * camView * m_projection;
+
 	cbMatrixData cbMat;
-	cbMat.world = XMMatrixTranspose(cube1World);
-	cbMat.WVP = XMMatrixTranspose(WVP);
-	m_pImmediateContext->UpdateSubresource(m_pConstMatrixBuffer, 0, NULL, &cbMat, 0, 0);
-	m_pImmediateContext->VSSetConstantBuffers(0, 1, &m_pConstMatrixBuffer);
+	XMMATRIX WVP;
+	std::vector<PxVec3> positions = m_pObjectManager->getPositions();
 
-	m_pShader->draw();
-	m_pImmediateContext->DrawIndexed(36, 0, 0);
+	for(int i = 0; i < m_pObjectManager->totalAlive(); i++) {
+		XMMATRIX translation = XMMatrixIdentity();
+		translation = XMMatrixTranslation(positions[i].x, positions[i].y, positions[i].z);
+		WVP = translation * camView * m_projection;
+		cbMat.world = XMMatrixTranspose(translation);
+		cbMat.WVP = XMMatrixTranspose(WVP);
+		m_pImmediateContext->UpdateSubresource(m_pConstMatrixBuffer, 0, NULL, &cbMat, 0, 0);
+		m_pImmediateContext->VSSetConstantBuffers(0, 1, &m_pConstMatrixBuffer);
 
+		m_pShader->draw();
+
+		//Оптимизировать! И пофиксить.
+		m_pImmediateContext->DrawIndexed(m_pObjectManager->getObject("box1")->getIndices().size(), 0, 0);
+	}
 	return true;
 }
 

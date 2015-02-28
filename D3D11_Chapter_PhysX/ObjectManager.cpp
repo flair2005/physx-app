@@ -96,3 +96,22 @@ int ObjectManager::totalIndices() {
 
 	return totalInd;
 }
+
+void ObjectManager::updateObjects() {
+	m_totalAlive = 0;
+	std::for_each(objectsMap.begin(), objectsMap.end(), [&](std::pair<std::string, Object*> obj)
+																		{ if(obj.second->isAlive()) m_totalAlive++; });
+	
+}
+
+int ObjectManager::totalAlive() {
+	return m_totalAlive;
+}
+
+std::vector<PxVec3> ObjectManager::getPositions() {
+	std::vector<PxVec3> positions;
+	std::for_each(objectsMap.begin(), objectsMap.end(), [&](std::pair<std::string, Object*> obj)
+										{ if(obj.second->isAlive()) positions.push_back(obj.second->getPosition()); });
+
+	return positions;
+}

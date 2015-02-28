@@ -34,35 +34,35 @@ void Box::createModel() {
 	std::vector<Vertex> vertices;
 
 	Vertex v[] = {
-		Vertex(-(m_width), -(m_height), -(m_depth), 0.0f, 1.0f, -1.0f, -1.0f, -1.0f),
-		Vertex(-(m_width),  (m_height), -(m_depth), 0.0f, 0.0f, -1.0f,  1.0f, -1.0f),
-		Vertex( (m_width),  (m_height), -(m_depth), 1.0f, 0.0f,  1.0f,  1.0f, -1.0f),
-		Vertex( (m_width), -(m_height), -(m_depth), 1.0f, 1.0f,  1.0f, -1.0f, -1.0f),
+		Vertex(-(m_width/2), -(m_height/2), -(m_depth/2), 0.0f, 1.0f, -1.0f, -1.0f, -1.0f),
+		Vertex(-(m_width/2),  (m_height/2), -(m_depth/2), 0.0f, 0.0f, -1.0f,  1.0f, -1.0f),
+		Vertex( (m_width/2),  (m_height/2), -(m_depth/2), 1.0f, 0.0f,  1.0f,  1.0f, -1.0f),
+		Vertex( (m_width/2), -(m_height/2), -(m_depth/2), 1.0f, 1.0f,  1.0f, -1.0f, -1.0f),
 
-		Vertex(-(m_width), -(m_height), (m_depth), 1.0f, 1.0f, -1.0f, -1.0f, 1.0f),
-		Vertex( (m_width), -(m_height), (m_depth), 0.0f, 1.0f,  1.0f, -1.0f, 1.0f),
-		Vertex( (m_width),  (m_height), (m_depth), 0.0f, 0.0f,  1.0f,  1.0f, 1.0f),
-		Vertex(-(m_width),  (m_height), (m_depth), 1.0f, 0.0f, -1.0f,  1.0f, 1.0f),
+		Vertex(-(m_width/2), -(m_height/2), (m_depth/2), 1.0f, 1.0f, -1.0f, -1.0f, 1.0f),
+		Vertex( (m_width/2), -(m_height/2), (m_depth/2), 0.0f, 1.0f,  1.0f, -1.0f, 1.0f),
+		Vertex( (m_width/2),  (m_height/2), (m_depth/2), 0.0f, 0.0f,  1.0f,  1.0f, 1.0f),
+		Vertex(-(m_width/2),  (m_height/2), (m_depth/2), 1.0f, 0.0f, -1.0f,  1.0f, 1.0f),
 
-		Vertex(-(m_width), (m_height), -(m_depth), 0.0f, 1.0f,-1.0f, 1.0f, -1.0f),
-		Vertex(-(m_width), (m_height),  (m_depth), 0.0f, 0.0f,-1.0f, 1.0f,  1.0f),
-		Vertex( (m_width), (m_height),  (m_depth), 1.0f, 0.0f, 1.0f, 1.0f,  1.0f),
-		Vertex( (m_width), (m_height), -(m_depth), 1.0f, 1.0f, 1.0f, 1.0f, -1.0f),
+		Vertex(-(m_width/2), (m_height/2), -(m_depth/2), 0.0f, 1.0f,-1.0f, 1.0f, -1.0f),
+		Vertex(-(m_width/2), (m_height/2),  (m_depth/2), 0.0f, 0.0f,-1.0f, 1.0f,  1.0f),
+		Vertex( (m_width/2), (m_height/2),  (m_depth/2), 1.0f, 0.0f, 1.0f, 1.0f,  1.0f),
+		Vertex( (m_width/2), (m_height/2), -(m_depth/2), 1.0f, 1.0f, 1.0f, 1.0f, -1.0f),
 
-		Vertex(-(m_width), -(m_height), -(m_depth), 1.0f, 1.0f,-1.0f, -1.0f, -1.0f),
-		Vertex( (m_width), -(m_height), -(m_depth), 0.0f, 1.0f, 1.0f, -1.0f, -1.0f),
-		Vertex( (m_width), -(m_height),  (m_depth), 0.0f, 0.0f, 1.0f, -1.0f,  1.0f),
-		Vertex(-(m_width), -(m_height),  (m_depth), 1.0f, 0.0f,-1.0f, -1.0f,  1.0f),
+		Vertex(-(m_width/2), -(m_height/2), -(m_depth/2), 1.0f, 1.0f,-1.0f, -1.0f, -1.0f),
+		Vertex( (m_width/2), -(m_height/2), -(m_depth/2), 0.0f, 1.0f, 1.0f, -1.0f, -1.0f),
+		Vertex( (m_width/2), -(m_height/2),  (m_depth/2), 0.0f, 0.0f, 1.0f, -1.0f,  1.0f),
+		Vertex(-(m_width/2), -(m_height/2),  (m_depth/2), 1.0f, 0.0f,-1.0f, -1.0f,  1.0f),
 
-		Vertex(-(m_width), -(m_height),  (m_depth), 0.0f, 1.0f,-1.0f, -1.0f,  1.0f),
-		Vertex(-(m_width),  (m_height),  (m_depth), 0.0f, 0.0f,-1.0f,  1.0f,  1.0f),
-		Vertex(-(m_width),  (m_height), -(m_depth), 1.0f, 0.0f,-1.0f,  1.0f, -1.0f),
-		Vertex(-(m_width), -(m_height), -(m_depth), 1.0f, 1.0f,-1.0f, -1.0f, -1.0f),
+		Vertex(-(m_width/2), -(m_height/2),  (m_depth/2), 0.0f, 1.0f,-1.0f, -1.0f,  1.0f),
+		Vertex(-(m_width/2),  (m_height/2),  (m_depth/2), 0.0f, 0.0f,-1.0f,  1.0f,  1.0f),
+		Vertex(-(m_width/2),  (m_height/2), -(m_depth/2), 1.0f, 0.0f,-1.0f,  1.0f, -1.0f),
+		Vertex(-(m_width/2), -(m_height/2), -(m_depth/2), 1.0f, 1.0f,-1.0f, -1.0f, -1.0f),
 
-		Vertex( (m_width), -(m_height), -(m_depth), 0.0f, 1.0f, 1.0f, -1.0f, -1.0f),
-		Vertex( (m_width),  (m_height), -(m_depth), 0.0f, 0.0f, 1.0f,  1.0f, -1.0f),
-		Vertex( (m_width),  (m_height),  (m_depth), 1.0f, 0.0f, 1.0f,  1.0f,  1.0f),
-		Vertex( (m_width), -(m_height),  (m_depth), 1.0f, 1.0f, 1.0f, -1.0f,  1.0f),
+		Vertex( (m_width/2), -(m_height/2), -(m_depth/2), 0.0f, 1.0f, 1.0f, -1.0f, -1.0f),
+		Vertex( (m_width/2),  (m_height/2), -(m_depth/2), 0.0f, 0.0f, 1.0f,  1.0f, -1.0f),
+		Vertex( (m_width/2),  (m_height/2),  (m_depth/2), 1.0f, 0.0f, 1.0f,  1.0f,  1.0f),
+		Vertex( (m_width/2), -(m_height/2),  (m_depth/2), 1.0f, 1.0f, 1.0f, -1.0f,  1.0f),
 	};
 
 	for(int i = 0; i < ARRAYSIZE(v); i++) {

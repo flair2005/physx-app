@@ -8,6 +8,7 @@
 class ObjectManager {
 private:
 	std::unordered_map<std::string, Object*> objectsMap;
+	int m_totalAlive;
 public:
 	ObjectManager();
 	~ObjectManager();
@@ -16,8 +17,16 @@ public:
 
 	bool engageObject(std::string key);
 
+	void updateObjects();
+
 	Vertex* getVertices();
 	DWORD* getIndices();
+	Object* getObject(std::string key)		{ return objectsMap.at(key);	}
+
+	std::vector<PxVec3> getPositions();
+
+	int totalObjects()						{ return objectsMap.size();		}
+	int totalAlive();
 
 	int totalVertices();
 	int totalIndices();

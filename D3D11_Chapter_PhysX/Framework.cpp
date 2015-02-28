@@ -159,7 +159,8 @@ bool Framework::m_frame(float dt) {
 		
 	preRender(dt);				//Симуляция происходит здесь
 
-	//m_scene->updateActors()
+	m_objectManager->updateObjects();	//Считаем, сколько осталось живых объектов
+
 	m_textManager->setDynamicText("key_fps_count", m_fps->getFpsStr());		//Меняем число Fps в объекте динамического текста
 
 	m_textManager->drawText();	//И выводим его на экран
