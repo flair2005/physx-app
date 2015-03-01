@@ -94,11 +94,6 @@ PxFilterFlags Scene::defaultFilterShader(
 }
 
 void Scene::Close() {
-	/*for(int i = 0; i < m_actorsList.size(); i++) {
-		m_actorsList.front()->destroy();
-	}
-	m_actorsList.clear();*/
-
 	if(m_pScene) {
 		m_pScene->release();
 	}

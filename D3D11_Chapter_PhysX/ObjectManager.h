@@ -13,6 +13,8 @@ public:
 	ObjectManager();
 	~ObjectManager();
 
+	void destroy();
+
 	bool addBox(std::string key, Physics* pPhysics, PxMaterial* pMaterial, PxVec3 position, PxReal density, PxVec3 velocity);
 
 	bool engageObject(std::string key);

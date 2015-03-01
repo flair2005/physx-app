@@ -109,3 +109,9 @@ void ObjectManager::getPositions(std::vector<std::pair<PxVec3, int>>& positions)
 		{ tmp.first = obj.second->getPosition(), tmp.second = obj.second->getIndices().size(); positions.push_back(tmp); } 
 	});
 }
+
+void ObjectManager::destroy() {
+	std::for_each(objectsMap.begin(), objectsMap.end(), [&](std::pair<std::string, Object*> obj) {
+		obj.second->destroy();
+	});
+}

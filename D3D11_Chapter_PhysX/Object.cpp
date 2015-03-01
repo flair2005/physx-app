@@ -15,6 +15,8 @@ void Object::destroy() {
 	if(isCreated()) {
 		m_pActor->destroy();
 	}
+	m_vertices.clear();
+	m_indices.clear();
 	m_pActor = nullptr;
 }
 

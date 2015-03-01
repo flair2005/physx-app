@@ -180,6 +180,7 @@ void Framework::postRender(float dt) {
 void Framework::Close() {
 	m_init = false;
 	m_render->shutdown();
+	m_objectManager->destroy();
 	_DELETE(m_render);
 	_CLOSE(m_wnd);
 	_CLOSE(m_input);
