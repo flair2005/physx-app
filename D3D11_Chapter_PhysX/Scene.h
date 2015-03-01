@@ -4,7 +4,9 @@
 #include "PhysXError.h"
 #include "Physics.h"
 #include "Object.h"
-#include "Box.h"
+//#include "Box.h"
+#include "ObjectManager.h"
+
 /*
 	Scene определяет поведение отслеживаемых объектов, называемых актерами (Actor), их реакцию на различные события
 	Наследуется от PxSimulationEventCallback, чтобы можно было определить реакцию актеров.
@@ -31,7 +33,7 @@ private:
 	PxFilterObjectAttributes attributes1, PxFilterData filterData1,
 	PxPairFlags& pairFlags, const void* constantBlock, PxU32 constantBlockSize);
 
-	std::list<Object*> m_actorsList;			//Список отслеживаемых актеров. Самое место ему в ObjectManager
+	//std::list<Object*> m_actorsList;			//Список отслеживаемых актеров. Самое место ему в ObjectManager
 
 	bool isInit;
 
@@ -53,9 +55,9 @@ public:
 
 	bool initScene(Physics* pPhysics);
 	PxScene* getPxScene() { if(isInit) return m_pScene; }
-	void addActors();				//Тут нужно придумать что-то другое, либо вообще убрать (например, в ObjectManager)
+	void addActors(ObjectManager* objectManager);
+	//void addActors();				//Тут нужно придумать что-то другое, либо вообще убрать (например, в ObjectManager)
 
-	bool createActors();
 	bool createPlane();										//Создает поверхность, "землю", по умолчанию
 	bool createPlane(PxVec3 pos, PxMaterial* material);		//Либо можно самому задать ее параметры
 

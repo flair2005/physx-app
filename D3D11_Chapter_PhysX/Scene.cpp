@@ -94,10 +94,10 @@ PxFilterFlags Scene::defaultFilterShader(
 }
 
 void Scene::Close() {
-	for(int i = 0; i < m_actorsList.size(); i++) {
+	/*for(int i = 0; i < m_actorsList.size(); i++) {
 		m_actorsList.front()->destroy();
 	}
-	m_actorsList.clear();
+	m_actorsList.clear();*/
 
 	if(m_pScene) {
 		m_pScene->release();
@@ -142,24 +142,6 @@ void Scene::onContact(const PxContactPairHeader& pairHeader, const PxContactPair
 	}
 }
 
-bool Scene::createActors() {
-	PxVec3 position;		//Начальная позиция актера
-	position.x = 5.0f;
-	position.y = 5.1f;
-	position.z = 2.0f;
-	PxVec3 velocity;		//Скорость
-	velocity.x = 0.01f;
-	velocity.y = 0.0f;
-	velocity.z = 0.0f;
-	Box* simpleBox = new Box(2.0f, 2.0f, 2.0f);
-	simpleBox->create(m_pPhysics, m_pPhysics->getPxPhysics()->createMaterial(0.5f, 0.5f, 0.1f), 
-									position, 1.0f, velocity);
-	simpleBox->engage();	//"Включаем" этого актера
-	m_actorsList.push_front(simpleBox);	//И добавляем его в список актеров
-
-	return true;
-}
-
 //Создаем Plane по умолчанию
 //В этом случае просто вызываем отсюда createPlane с параметрами
 bool Scene::createPlane() {
@@ -192,32 +174,26 @@ bool Scene::createPlane(PxVec3 pos, PxMaterial* material) {
 }
 
 //Отдаем актеров из списка сцене, чтобы она могла ими управлять
-void Scene::addActors() {
+void Scene::addActors(ObjectManager* objectManager) {
+	
+
+	m_pScene->addActor(*objectManager->getObject("box1")->getActor());
+	Log::get()->debug("(x: %f, y: %f, z: %f)", objectManager->getObject("box1")->getPosition().x,
+												objectManager->getObject("box1")->getPosition().y,
+												objectManager->getObject("box1")->getPosition().z);
 	m_pScene->addActor(*m_plane);
-
 	//Исключительный случай, когда в списке только 1 актер
-	if(m_actorsList.size() == 1) {
+	/*if(m_actorsList.size() == 1) {
 		m_pScene->addActor(*(m_actorsList.front()->getActor()));
-		Log::get()->debug("(x: %f, y: %f, z: %f)", m_actorsList.front()->getPosition().x, m_actorsList.front()->getPosition().y,
-													m_actorsList.front()->getPosition().z);
+		
 		return;
-	}
+	}*/
 
-	Object* pr;
+	/*Object* pr;
 	for(pr = m_actorsList.front(); pr != m_actorsList.back(); pr++) {
 		m_pScene->addActor(*(pr->getActor()));
 		Log::get()->debug("(x: %f, y: %f, z: %f)", m_actorsList.front()->getPosition().x, m_actorsList.front()->getPosition().y,
 													m_actorsList.front()->getPosition().z);
 		
-	}
-}
-
-//Убрать!
-std::wstring Scene::getActorPos() {
-	
-	wchar_t tmp[255];
-
-	swprintf(tmp, 255, L"(%f; %f; %f)", m_actorsList.front()->getPosition().x, m_actorsList.back()->getPosition().y,
-					m_actorsList.back()->getPosition().z);
-	return tmp;
+	}*/
 }

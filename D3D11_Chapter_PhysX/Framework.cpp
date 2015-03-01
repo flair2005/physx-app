@@ -80,11 +80,6 @@ bool Framework::init() {
 		return false;
 	}
 
-	if(!m_scene->createActors()) {
-		Log::get()->err("Не удалось создать актеров");
-		return false;
-	}
-
 	m_textManager = new TextManager(m_render);
 	if(!m_textManager->addFont("key_fps_caption", "Res\\2.fnt")) {
 		Log::get()->err("Font Create Failed");
@@ -94,7 +89,7 @@ bool Framework::init() {
 	
 	//Temporary use of ObjectManager
 	if(!m_objectManager->addBox("box1", m_physics, m_physics->getPxPhysics()->createMaterial(0.5f, 0.5f, 0.1f),
-													PxVec3(0.0f, 0.0f, 0.0f), 0.8f, PxVec3(0.0f, 0.1f, 0.0f))) {
+													PxVec3(0.0f, 5.0f, 0.0f), 0.8f, PxVec3(0.0f, 0.1f, 0.0f))) {
 		return false;
 	}
 	m_objectManager->engageObject("box1");
@@ -104,13 +99,10 @@ bool Framework::init() {
 		return false;
 	}
 
+	m_scene->addActors(m_objectManager);
+
 	m_textManager->addStaticText("key_fps_text", "key_fps_caption", L"FPS:", 1.0f, 1.0f, 0.0f, 10.0f, 10.0f);
 	m_textManager->addDynamicText("key_fps_count", "key_fps_caption", L"0", 1.0f, 1.0f, 0.0f, 80.0f, 10.0f, 8);
-	
-	m_scene->addActors();
-	
-	
-	
 
 	m_init = true;
 	return true;
@@ -159,7 +151,7 @@ bool Framework::m_frame(float dt) {
 		
 	preRender(dt);				//Симуляция происходит здесь
 
-	m_objectManager->updateObjects();	//Считаем, сколько осталось живых объектов
+	m_objectManager->updateObjects();	//Обновляем позиции объектов
 
 	m_textManager->setDynamicText("key_fps_count", m_fps->getFpsStr());		//Меняем число Fps в объекте динамического текста
 

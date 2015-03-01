@@ -21,7 +21,7 @@ public:
 
 	void destroy();
 
-	PxRigidDynamic* getRigidDynamic()		{ return m_pActor;		}
+	PxRigidDynamic* getActor()				{ return m_pActor;		}
 
 	bool isCreated()						{ return m_isCreated;	}
 };

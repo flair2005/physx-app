@@ -44,7 +44,7 @@ class Render {
 		Shader* m_pShader;
 
 		bool isInit;
-
+		std::vector<std::pair<PxVec3, int>> positions;
 		ObjectManager* m_pObjectManager;
 	public:
 		Render();

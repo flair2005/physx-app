@@ -16,8 +16,10 @@ Box::~Box() {
 
 }
 
-PxGeometry Box::createGeometry() {
-	return PxBoxGeometry(m_width/2, m_height/2, m_depth/2);
+PxGeometryHolder Box::createGeometry() {
+	PxGeometryHolder geometry; 
+	geometry.storeAny(PxBoxGeometry(m_width/2, m_height/2, m_depth/2));
+	return geometry;
 }
 
 bool Box::create(Physics* pPhysics, PxMaterial* pMaterial, PxVec3 position, PxReal density,	PxVec3 velocity) {

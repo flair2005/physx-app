@@ -26,7 +26,7 @@ protected:
 	PxVec3 m_velocity;
 
 	void getModel(std::vector<Vertex> vertices,  std::vector<DWORD> indices);
-	bool construct(Physics* pPhysics, PxMaterial* pMaterial, PxVec3 position, PxReal density, PxVec3 velocity, PxGeometry geometry);
+	bool construct(Physics* pPhysics, PxMaterial* pMaterial, PxVec3 position, PxReal density, PxVec3 velocity, PxGeometryHolder geometry);
 public:
 	Object();
 	virtual ~Object();
@@ -36,6 +36,7 @@ public:
 	virtual void destroy();
 
 	PxVec3 getPosition()					{ return m_position;			}
+	void updatePosition();
 
 	std::vector<Vertex> getVertices()		{ return m_vertices;			}
 	std::vector<DWORD> getIndices()			{ return m_indices;				}
@@ -49,5 +50,5 @@ public:
 	void engage()							{ m_isAlive = true;				}
 	void kill()								{ m_isAlive = false;			}
 
-	PxRigidDynamic* getActor() const;
+	PxActor* getActor();
 };

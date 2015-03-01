@@ -19,7 +19,7 @@ void Object::destroy() {
 }
 
 bool Object::construct(Physics* pPhysics, PxMaterial* pMaterial, PxVec3 position, PxReal density,
-																PxVec3 velocity, PxGeometry geometry) {
+																PxVec3 velocity, PxGeometryHolder geometry) {
 	m_position = position;
 	m_velocity = velocity;
 
@@ -37,7 +37,7 @@ bool Object::construct(Physics* pPhysics, PxMaterial* pMaterial, PxVec3 position
 		return false;
 	}
 
-	if(!m_pActor->attachGeometry(&geometry)) {
+	if(!m_pActor->attachGeometry(&geometry.any())) {
 		Log::get()->err("Actor attachGeometry Failed");
 		return false;
 	}
@@ -45,9 +45,9 @@ bool Object::construct(Physics* pPhysics, PxMaterial* pMaterial, PxVec3 position
 	return true;
 }
 
-PxRigidDynamic* Object::getActor() const {
+PxActor* Object::getActor() {
 	if(isCreated()) {
-		return m_pActor->getRigidDynamic();
+		return m_pActor->getActor();
 	} else {
 		Log::get()->err("Ошибка при обращении к Actor: объект не был инициализирован");
 		return nullptr;
@@ -59,10 +59,8 @@ void Object::getModel(std::vector<Vertex> vertices, std::vector<DWORD> indices) 
 	m_indices = indices;
 }
 
-/*bool Object::attachGeometry(PxGeometry* geometry) {
-	if(!m_pActor->attachGeometry(geometry)) {
-		return false;
-	}
-
-	return true;
-}*/
+void Object::updatePosition() {
+	m_position.x = m_pActor->getActor()->getGlobalPose().p.x;
+	m_position.y = m_pActor->getActor()->getGlobalPose().p.y;
+	m_position.z = m_pActor->getActor()->getGlobalPose().p.z;
+}

@@ -15,7 +15,7 @@ public:
 	Box(PxVec3 size);
 	virtual ~Box();
 
-	virtual PxGeometry createGeometry();
+	virtual PxGeometryHolder createGeometry();
 	virtual bool create(Physics* pPhysics, PxMaterial* pMaterial, PxVec3 position, PxReal density,
 															PxVec3 velocity);
 };

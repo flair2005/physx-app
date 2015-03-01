@@ -23,10 +23,9 @@ public:
 	DWORD* getIndices();
 	Object* getObject(std::string key)		{ return objectsMap.at(key);	}
 
-	std::vector<PxVec3> getPositions();
+	void getPositions(std::vector<std::pair<PxVec3, int>>& positions);
 
 	int totalObjects()						{ return objectsMap.size();		}
-	int totalAlive();
 
 	int totalVertices();
 	int totalIndices();
