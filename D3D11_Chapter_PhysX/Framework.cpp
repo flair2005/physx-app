@@ -89,10 +89,26 @@ bool Framework::init() {
 	
 	//Temporary use of ObjectManager
 	if(!m_objectManager->addBox("box1", m_physics, m_physics->getPxPhysics()->createMaterial(0.5f, 0.5f, 0.1f),
-													PxVec3(0.0f, 5.0f, 0.0f), 0.8f, PxVec3(0.0f, 0.1f, 0.0f))) {
+								PxVec3(-3.0f, 6.0f, 0.0f), 0.8f, PxVec3(0.0f, 0.0f, 0.0f), PxVec3(2.0f, 0.5f, 1.0f))) {
 		return false;
 	}
+	if(!m_objectManager->addBox("box2", m_physics, m_physics->getPxPhysics()->createMaterial(0.5f, 0.5f, 0.1f),
+								PxVec3(-3.0f, 0.0f, 0.0f), 0.8f, PxVec3(0.0f, 0.0f, 0.0f), PxVec3(4.0f, 4.0f, 4.0f))) {
+		return false;
+	}
+	if(!m_objectManager->addBox("box3", m_physics, m_physics->getPxPhysics()->createMaterial(0.5f, 0.5f, 0.1f),
+								PxVec3(3.0f, 6.0f, 0.0f), 0.8f, PxVec3(0.0f, 0.0f, 0.0f), PxVec3(4.0f, 4.0f, 4.0f))) {
+		return false;
+	}
+	if(!m_objectManager->addBox("box4", m_physics, m_physics->getPxPhysics()->createMaterial(0.5f, 0.5f, 0.1f),
+								PxVec3(3.0f, 2.0f, 0.0f), 0.8f, PxVec3(0.0f, 0.0f, 0.0f), PxVec3(2.0f, 0.5f, 1.0f))) {
+		return false;
+	}
+	
 	m_objectManager->engageObject("box1");
+	m_objectManager->engageObject("box2");
+	m_objectManager->engageObject("box3");
+	m_objectManager->engageObject("box4");
 
 	if(!m_render->initObjects(m_objectManager)) {
 		Log::get()->err("Не удалось инициализировать объекты в рендере");

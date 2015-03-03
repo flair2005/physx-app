@@ -1,15 +1,9 @@
 #include "Box.h"
 
-Box::Box(PxReal width, PxReal height, PxReal depth) {
-	m_width = width;
-	m_height = height;
-	m_depth = depth;
-}
-
 Box::Box(PxVec3 size) {
-	m_width = size.x;
-	m_height = size.y;
-	m_depth = size.z;
+	m_scale.x = size.x;
+	m_scale.y = size.y;
+	m_scale.z = size.z;
 }
 
 Box::~Box() {
@@ -17,8 +11,8 @@ Box::~Box() {
 }
 
 PxGeometryHolder Box::createGeometry() {
-	PxGeometryHolder geometry; 
-	geometry.storeAny(PxBoxGeometry(m_width/2, m_height/2, m_depth/2));
+	PxGeometryHolder geometry;
+	geometry.storeAny(PxBoxGeometry(m_scale/2));
 	return geometry;
 }
 
@@ -36,35 +30,35 @@ void Box::createModel() {
 	std::vector<Vertex> vertices;
 
 	Vertex v[] = {
-		Vertex(-(m_width/2), -(m_height/2), -(m_depth/2), 0.0f, 1.0f, -1.0f, -1.0f, -1.0f),
-		Vertex(-(m_width/2),  (m_height/2), -(m_depth/2), 0.0f, 0.0f, -1.0f,  1.0f, -1.0f),
-		Vertex( (m_width/2),  (m_height/2), -(m_depth/2), 1.0f, 0.0f,  1.0f,  1.0f, -1.0f),
-		Vertex( (m_width/2), -(m_height/2), -(m_depth/2), 1.0f, 1.0f,  1.0f, -1.0f, -1.0f),
+		Vertex(-1.0f, -1.0f, -1.0f, 0.0f, 1.0f, -1.0f, -1.0f, -1.0f),
+		Vertex(-1.0f,  1.0f, -1.0f, 0.0f, 0.0f, -1.0f,  1.0f, -1.0f),
+		Vertex( 1.0f,  1.0f, -1.0f, 1.0f, 0.0f,  1.0f,  1.0f, -1.0f),
+		Vertex( 1.0f, -1.0f, -1.0f, 1.0f, 1.0f,  1.0f, -1.0f, -1.0f),
 
-		Vertex(-(m_width/2), -(m_height/2), (m_depth/2), 1.0f, 1.0f, -1.0f, -1.0f, 1.0f),
-		Vertex( (m_width/2), -(m_height/2), (m_depth/2), 0.0f, 1.0f,  1.0f, -1.0f, 1.0f),
-		Vertex( (m_width/2),  (m_height/2), (m_depth/2), 0.0f, 0.0f,  1.0f,  1.0f, 1.0f),
-		Vertex(-(m_width/2),  (m_height/2), (m_depth/2), 1.0f, 0.0f, -1.0f,  1.0f, 1.0f),
+		Vertex(-1.0f, -1.0f, 1.0f, 1.0f, 1.0f, -1.0f, -1.0f, 1.0f),
+		Vertex( 1.0f, -1.0f, 1.0f, 0.0f, 1.0f,  1.0f, -1.0f, 1.0f),
+		Vertex( 1.0f,  1.0f, 1.0f, 0.0f, 0.0f,  1.0f,  1.0f, 1.0f),
+		Vertex(-1.0f,  1.0f, 1.0f, 1.0f, 0.0f, -1.0f,  1.0f, 1.0f),
 
-		Vertex(-(m_width/2), (m_height/2), -(m_depth/2), 0.0f, 1.0f,-1.0f, 1.0f, -1.0f),
-		Vertex(-(m_width/2), (m_height/2),  (m_depth/2), 0.0f, 0.0f,-1.0f, 1.0f,  1.0f),
-		Vertex( (m_width/2), (m_height/2),  (m_depth/2), 1.0f, 0.0f, 1.0f, 1.0f,  1.0f),
-		Vertex( (m_width/2), (m_height/2), -(m_depth/2), 1.0f, 1.0f, 1.0f, 1.0f, -1.0f),
+		Vertex(-1.0f, 1.0f, -1.0f, 0.0f, 1.0f,-1.0f, 1.0f, -1.0f),
+		Vertex(-1.0f, 1.0f,  1.0f, 0.0f, 0.0f,-1.0f, 1.0f,  1.0f),
+		Vertex( 1.0f, 1.0f,  1.0f, 1.0f, 0.0f, 1.0f, 1.0f,  1.0f),
+		Vertex( 1.0f, 1.0f, -1.0f, 1.0f, 1.0f, 1.0f, 1.0f, -1.0f),
 
-		Vertex(-(m_width/2), -(m_height/2), -(m_depth/2), 1.0f, 1.0f,-1.0f, -1.0f, -1.0f),
-		Vertex( (m_width/2), -(m_height/2), -(m_depth/2), 0.0f, 1.0f, 1.0f, -1.0f, -1.0f),
-		Vertex( (m_width/2), -(m_height/2),  (m_depth/2), 0.0f, 0.0f, 1.0f, -1.0f,  1.0f),
-		Vertex(-(m_width/2), -(m_height/2),  (m_depth/2), 1.0f, 0.0f,-1.0f, -1.0f,  1.0f),
+		Vertex(-1.0f, -1.0f, -1.0f, 1.0f, 1.0f,-1.0f, -1.0f, -1.0f),
+		Vertex( 1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 1.0f, -1.0f, -1.0f),
+		Vertex( 1.0f, -1.0f,  1.0f, 0.0f, 0.0f, 1.0f, -1.0f,  1.0f),
+		Vertex(-1.0f, -1.0f,  1.0f, 1.0f, 0.0f,-1.0f, -1.0f,  1.0f),
 
-		Vertex(-(m_width/2), -(m_height/2),  (m_depth/2), 0.0f, 1.0f,-1.0f, -1.0f,  1.0f),
-		Vertex(-(m_width/2),  (m_height/2),  (m_depth/2), 0.0f, 0.0f,-1.0f,  1.0f,  1.0f),
-		Vertex(-(m_width/2),  (m_height/2), -(m_depth/2), 1.0f, 0.0f,-1.0f,  1.0f, -1.0f),
-		Vertex(-(m_width/2), -(m_height/2), -(m_depth/2), 1.0f, 1.0f,-1.0f, -1.0f, -1.0f),
+		Vertex(-1.0f, -1.0f,  1.0f, 0.0f, 1.0f,-1.0f, -1.0f,  1.0f),
+		Vertex(-1.0f,  1.0f,  1.0f, 0.0f, 0.0f,-1.0f,  1.0f,  1.0f),
+		Vertex(-1.0f,  1.0f, -1.0f, 1.0f, 0.0f,-1.0f,  1.0f, -1.0f),
+		Vertex(-1.0f, -1.0f, -1.0f, 1.0f, 1.0f,-1.0f, -1.0f, -1.0f),
 
-		Vertex( (m_width/2), -(m_height/2), -(m_depth/2), 0.0f, 1.0f, 1.0f, -1.0f, -1.0f),
-		Vertex( (m_width/2),  (m_height/2), -(m_depth/2), 0.0f, 0.0f, 1.0f,  1.0f, -1.0f),
-		Vertex( (m_width/2),  (m_height/2),  (m_depth/2), 1.0f, 0.0f, 1.0f,  1.0f,  1.0f),
-		Vertex( (m_width/2), -(m_height/2),  (m_depth/2), 1.0f, 1.0f, 1.0f, -1.0f,  1.0f),
+		Vertex( 1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 1.0f, -1.0f, -1.0f),
+		Vertex( 1.0f,  1.0f, -1.0f, 0.0f, 0.0f, 1.0f,  1.0f, -1.0f),
+		Vertex( 1.0f,  1.0f,  1.0f, 1.0f, 0.0f, 1.0f,  1.0f,  1.0f),
+		Vertex( 1.0f, -1.0f,  1.0f, 1.0f, 1.0f, 1.0f, -1.0f,  1.0f),
 	};
 
 	for(int i = 0; i < ARRAYSIZE(v); i++) {

@@ -12,13 +12,13 @@ ObjectManager::~ObjectManager() {
 }
 
 bool ObjectManager::addBox(std::string key, Physics* pPhysics, PxMaterial* pMaterial, PxVec3 position,
-																		PxReal density, PxVec3 velocity) {
-	Box* box = new Box(1.0f, 1.0f, 1.0f);
+																		PxReal density, PxVec3 velocity, PxVec3 scale) {
+	Box* box = new Box(scale);
 	if(!box->create(pPhysics, pMaterial, position, density, velocity)) {
 		Log::get()->err("Box Create Failed");
 		return false;
 	}
-
+	box->getActor()->setName(key.c_str());
 	objectsMap[key] = box;
 
 	return true;
@@ -114,4 +114,18 @@ void ObjectManager::destroy() {
 	std::for_each(objectsMap.begin(), objectsMap.end(), [&](std::pair<std::string, Object*> obj) {
 		obj.second->destroy();
 	});
+}
+
+void ObjectManager::getActors(std::vector<PxActor*>& actors) {
+	std::for_each(objectsMap.begin(), objectsMap.end(), [&](std::pair<std::string, Object*> obj) {
+		actors.push_back(obj.second->getActor());
+	});
+}
+
+void ObjectManager::getObjects(std::vector<Object*>& objects) {
+	std::for_each(objectsMap.begin(), objectsMap.end(), [&](std::pair<std::string, Object*> obj) {
+		objects.push_back(obj.second);
+	});
+
+	return;
 }

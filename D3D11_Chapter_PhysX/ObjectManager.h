@@ -15,7 +15,7 @@ public:
 
 	void destroy();
 
-	bool addBox(std::string key, Physics* pPhysics, PxMaterial* pMaterial, PxVec3 position, PxReal density, PxVec3 velocity);
+	bool addBox(std::string key, Physics* pPhysics, PxMaterial* pMaterial, PxVec3 position, PxReal density, PxVec3 velocity, PxVec3 scale);
 
 	bool engageObject(std::string key);
 
@@ -26,6 +26,8 @@ public:
 	Object* getObject(std::string key)		{ return objectsMap.at(key);	}
 
 	void getPositions(std::vector<std::pair<PxVec3, int>>& positions);
+	void getActors(std::vector<PxActor*>& actors);
+	void getObjects(std::vector<Object*>& objects);
 
 	int totalObjects()						{ return objectsMap.size();		}
 

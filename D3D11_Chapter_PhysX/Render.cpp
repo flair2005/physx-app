@@ -2,6 +2,7 @@
 #include "Shader.h"
 #include "Scene.h"
 #include "Buffer.h"
+#include "Object.h"
 #include "ObjectManager.h"
 
 /*
@@ -268,7 +269,7 @@ bool Render::init() {
 	m_pConstMatrixBuffer = Buffer::createConstantBuffer(m_pd3dDevice, sizeof(cbMatrixData), false);
 	m_pConstLightBuffer = Buffer::createConstantBuffer(m_pd3dDevice, sizeof(cbLightData), false);
 
-	XMVECTOR camPosition = XMVectorSet(0.0f, 4.0f, -8.0f, 0.0f);
+	XMVECTOR camPosition = XMVectorSet(0.0f, 10.0f, -60.0f, 0.0f);
 	XMVECTOR camTarget = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
 	XMVECTOR camUp = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 	camView = XMMatrixLookAtLH(camPosition, camTarget, camUp);
@@ -286,6 +287,7 @@ bool Render::init() {
 
 bool Render::initObjects(ObjectManager* objectManager) {
 	m_pObjectManager = objectManager;
+
 	m_pIndexBuffer = Buffer::createIndexBuffer(m_pd3dDevice, sizeof(DWORD)*m_pObjectManager->totalIndices(),
 																	false, m_pObjectManager->getIndices());
 	m_pVertBuffer = Buffer::createVertexBuffer(m_pd3dDevice, sizeof(Vertex)*m_pObjectManager->totalVertices(),
@@ -317,14 +319,20 @@ bool Render::draw(PxReal dt) {
 
 	cbMatrixData cbMat;
 	XMMATRIX WVP;
-	positions.clear();
-	m_pObjectManager->getPositions(positions);
 
-	std::vector<std::pair<PxVec3, int>>::pointer p;;
-	for(p = &positions.front(); p <= &positions.back(); p++) {
-		XMMATRIX translation = XMMatrixIdentity();
-		translation = XMMatrixTranslation(p->first.x, p->first.y, p->first.z);
-		WVP = translation * camView * m_projection;
+	objects.clear();
+	m_pObjectManager->getObjects(objects);
+	XMMATRIX translation;
+	XMMATRIX rotation;
+	XMMATRIX scale;
+	
+
+	for(int i = 0; i < objects.size(); i++) {
+		XMMATRIX translation = XMMatrixTranslation(objects[i]->getPosition().x, objects[i]->getPosition().y, objects[i]->getPosition().z);
+		XMMATRIX rotation = XMMatrixRotationX(objects[i]->getRotation().x) *  XMMatrixRotationY(objects[i]->getRotation().y);
+		//rotation *= XMMatrixRotationZ(objects[i]->getRotation().z);
+		XMMATRIX scale = XMMatrixScaling(objects[i]->getScale().x, objects[i]->getScale().y, objects[i]->getScale().z);
+		WVP = translation * rotation * scale * camView * m_projection;
 		cbMat.world = XMMatrixTranspose(translation);
 		cbMat.WVP = XMMatrixTranspose(WVP);
 		m_pImmediateContext->UpdateSubresource(m_pConstMatrixBuffer, 0, NULL, &cbMat, 0, 0);
@@ -332,9 +340,9 @@ bool Render::draw(PxReal dt) {
 
 		m_pShader->draw();
 
-		//Оптимизировать! И пофиксить.
-		m_pImmediateContext->DrawIndexed(p->second, 0, 0);
+		m_pImmediateContext->DrawIndexed(objects[i]->getIndices().size(), 0, 0);
 	}
+
 	return true;
 }
 
@@ -349,12 +357,9 @@ void Render::endFrame() {
 }
 
 void Render::shutdown() {
-	//Close();
-
 	if(m_pImmediateContext) {
 		m_pImmediateContext->ClearState();
 	}
-
 	_CLOSE(m_pShader);
 	_RELEASE(m_pAlphaEnableBlendingState);
 	_RELEASE(m_pAlphaDisableBlendingState);

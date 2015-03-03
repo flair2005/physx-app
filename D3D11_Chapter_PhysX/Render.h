@@ -7,6 +7,7 @@
 
 class Shader;
 class ObjectManager;
+class Object;
 
 using namespace physx;
 
@@ -44,7 +45,7 @@ class Render {
 		Shader* m_pShader;
 
 		bool isInit;
-		std::vector<std::pair<PxVec3, int>> positions;
+		std::vector<Object*> objects;
 		ObjectManager* m_pObjectManager;
 	public:
 		Render();

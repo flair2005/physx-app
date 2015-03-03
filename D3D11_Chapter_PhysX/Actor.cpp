@@ -46,13 +46,9 @@ bool Actor::construct(Physics* pPhysics, PxMaterial* pMaterial, PxVec3 pos, PxRe
 	return true;
 }
 
-bool Actor::attachGeometry(PxGeometry* geometry) {
-	if(geometry) {
-		m_pShape = m_pActor->createShape(*geometry, *m_pMaterial);
-		m_isCreated = true;
-		return true;
-	} else {
-		Log::get()->err("Invalid Geometry");
-		return false;
-	}
+bool Actor::attachGeometry(PxGeometryHolder geometry) {
+	m_pShape = m_pActor->createShape(geometry.any(), *m_pMaterial);
+	//m_pShape = m_pActor->createShape(PxBoxGeometry(1.0f, 1.0f, 1.0f), *m_pMaterial);
+	m_isCreated = true;
+	return true;
 }

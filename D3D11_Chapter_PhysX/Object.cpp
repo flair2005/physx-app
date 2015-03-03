@@ -5,6 +5,7 @@ Object::Object() {
 	m_isAlive = false;
 	m_position = PxVec3(0.0f, 0.0f, 0.0f);
 	m_velocity = PxVec3(0.0f, 0.0f, 0.0f);
+	m_rotation = PxVec3(0.0f, 0.0f, 0.0f);
 }
 
 Object::~Object() {
@@ -39,7 +40,7 @@ bool Object::construct(Physics* pPhysics, PxMaterial* pMaterial, PxVec3 position
 		return false;
 	}
 
-	if(!m_pActor->attachGeometry(&geometry.any())) {
+	if(!m_pActor->attachGeometry(geometry)) {
 		Log::get()->err("Actor attachGeometry Failed");
 		return false;
 	}
@@ -62,7 +63,8 @@ void Object::getModel(std::vector<Vertex> vertices, std::vector<DWORD> indices) 
 }
 
 void Object::updatePosition() {
-	m_position.x = m_pActor->getActor()->getGlobalPose().p.x;
-	m_position.y = m_pActor->getActor()->getGlobalPose().p.y;
-	m_position.z = m_pActor->getActor()->getGlobalPose().p.z;
+	//Координаты от физиксовской модели немного отличаются
+	m_position.x = m_pActor->getActor()->getGlobalPose().p.x * 2/m_scale.x;
+	m_position.y = m_pActor->getActor()->getGlobalPose().p.y * 2/m_scale.y;
+	m_position.z = m_pActor->getActor()->getGlobalPose().p.z * -2/m_scale.z;
 }

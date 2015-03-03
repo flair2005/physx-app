@@ -17,7 +17,7 @@ public:
 	~Actor();
 
 	bool construct(Physics* pPhysics, PxMaterial* pMaterial, PxVec3 pos, PxReal density, PxVec3 velocity);
-	bool attachGeometry(PxGeometry* geometry);
+	bool attachGeometry(PxGeometryHolder geometry);
 
 	void destroy();
 

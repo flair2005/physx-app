@@ -24,6 +24,9 @@ private:
 protected:
 	PxVec3 m_position;
 	PxVec3 m_velocity;
+	PxVec3 m_rotation;
+
+	PxVec3 m_scale;
 
 	void getModel(std::vector<Vertex> vertices,  std::vector<DWORD> indices);
 	bool construct(Physics* pPhysics, PxMaterial* pMaterial, PxVec3 position, PxReal density, PxVec3 velocity, PxGeometryHolder geometry);
@@ -36,6 +39,8 @@ public:
 	virtual void destroy();
 
 	PxVec3 getPosition()					{ return m_position;			}
+	PxVec3 getScale()						{ return m_scale;				}
+	PxVec3 getRotation()					{ return m_rotation;			}
 	void updatePosition();
 
 	std::vector<Vertex> getVertices()		{ return m_vertices;			}

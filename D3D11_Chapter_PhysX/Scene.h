@@ -4,15 +4,15 @@
 #include "PhysXError.h"
 #include "Physics.h"
 #include "Object.h"
-//#include "Box.h"
 #include "ObjectManager.h"
 
+class SimulationEvent;
 /*
 	Scene определяет поведение отслеживаемых объектов, называемых актерами (Actor), их реакцию на различные события
 	Наследуется от PxSimulationEventCallback, чтобы можно было определить реакцию актеров.
 	Это достигается переопределением методов PxSimulationEventCallback и передачей указателя на Scene физиксу
 */
-class Scene : public PxSimulationEventCallback {
+class Scene {
 private:
 	//Цифры просто взял из мануала PhysX. Позже надо будет все-таки разобраться в последних трех значениях.
 	static const PxU32 m_NbThreads = 1;
@@ -25,6 +25,7 @@ private:
 	PxErrorCallback* m_pError;
 	PxCpuDispatcher* m_pCpuDispatcher;
 	PxCudaContextManager* m_pCudaContextManager;
+	SimulationEvent* m_pSimulationEvent;
 
 	void customizeSceneDesc(PxSceneDesc& sceneDesc);
 
@@ -33,36 +34,20 @@ private:
 	PxFilterObjectAttributes attributes1, PxFilterData filterData1,
 	PxPairFlags& pairFlags, const void* constantBlock, PxU32 constantBlockSize);
 
-	//std::list<Object*> m_actorsList;			//Список отслеживаемых актеров. Самое место ему в ObjectManager
-
 	bool isInit;
 
-	PxMaterial* m_planeMaterial;
-	PxRigidStatic* m_plane;
+	PxMaterial* m_planeMaterial;	//Убрать!
+	PxRigidStatic* m_plane;			//Убрать!
 public:
 	Scene();
 	~Scene();
 
-	//Переопределяем методы из PxSimulationEventCallback
-	//Вызываются физиксом тогда, когда обнаруживается коллизия или срабатывает триггер
-	//TODO: вообще, убрать бы их отсюда в отдельный класс, отвечающий чисто за события из PxSimulationEventCallback
-	virtual void onContact(const PxContactPairHeader& pairHeader, const PxContactPair* pairs, PxU32 nbPairs);
-	virtual void onTrigger(PxTriggerPair* pairs, PxU32 count) {}
-	virtual void onConstraintBreak(PxConstraintInfo*, PxU32) {}
-	virtual void onWake(PxActor** , PxU32 ) {}
-	virtual void onSleep(PxActor** , PxU32 ) {}
-
-
 	bool initScene(Physics* pPhysics);
 	PxScene* getPxScene() { if(isInit) return m_pScene; }
 	void addActors(ObjectManager* objectManager);
-	//void addActors();				//Тут нужно придумать что-то другое, либо вообще убрать (например, в ObjectManager)
 
-	bool createPlane();										//Создает поверхность, "землю", по умолчанию
-	bool createPlane(PxVec3 pos, PxMaterial* material);		//Либо можно самому задать ее параметры
-
-	std::wstring getActorPos();				//Вот это надо убрать. Костыль обыкновенный для передачи позиции в Text
-	//PxVec3 getActorPosVec()		{ return m_actorsList.back()->getActor()->getGlobalPose().p; }	//То же самое для рендера
+	bool createPlane();										//Создает поверхность, "землю", по умолчанию, убрать ее отсюда
+	bool createPlane(PxVec3 pos, PxMaterial* material);		//Либо можно самому задать ее параметр
 
 	void Close();
 };

@@ -60,7 +60,34 @@ bool Physics::init(Render* pRender) {
 	//Унифицированное с полем (картой?) высот определение коллизий
 	PxRegisterUnifiedHeightFields(*m_pPhysX);
 
+	//Запускаем PhysX Visual Debugger
+#ifdef _DEBUG
+	if(!initVisualDebugger()) {
+		Log::get()->err("Visual Debugger Init Fail");
+	}
+#endif
+
 	isInit = true;
+	return true;
+}
+
+bool Physics::initVisualDebugger() {
+	if(m_pPhysX->getPvdConnectionManager() == NULL) {
+		m_pError->reportError(PxErrorCode::eDEBUG_WARNING, "PvdConnection Manager is not available", __FILE__, __LINE__);
+		return false;
+	}
+
+	//setup connection parameters
+	const char* pvd_host_ip = "127.0.0.1";			//IP, на котором запускается PVD
+	int port = 5425;								//TCP порт для подключения, который прослушивается PVD
+	unsigned int timeout = 100;						//Таймаут в миллисекундах ожидания ответа от PVD
+													//для консолей и удаленных ПК требуется большее значение
+	PxVisualDebuggerConnectionFlags connectionFlags = PxVisualDebuggerExt::getAllConnectionFlags();
+
+	//And now we try to connect
+	PxVisualDebuggerConnection* pvdConnection = PxVisualDebuggerExt::createConnection(m_pPhysX->getPvdConnectionManager(),
+												pvd_host_ip, port, timeout, connectionFlags);
+
 	return true;
 }
 

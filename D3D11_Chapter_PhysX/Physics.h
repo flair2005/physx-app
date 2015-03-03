@@ -17,6 +17,8 @@ private:
 	PxProfileZoneManager* m_pProfileZoneManager;
 	PxCooking* m_pCooking;
 	bool isInit;
+
+	bool initVisualDebugger();
 public:
 	Physics();
 	~Physics();

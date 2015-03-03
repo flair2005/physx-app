@@ -5,14 +5,9 @@
 
 class Box : public Primitive {
 private:
-	PxReal m_width;
-	PxReal m_height;
-	PxReal m_depth;
-
 	void createModel();
 public:
-	Box(PxReal width, PxReal height, PxReal depth);
-	Box(PxVec3 size);
+	Box(PxVec3 scale);
 	virtual ~Box();
 
 	virtual PxGeometryHolder createGeometry();
