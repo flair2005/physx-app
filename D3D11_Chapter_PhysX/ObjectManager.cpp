@@ -126,6 +126,4 @@ void ObjectManager::getObjects(std::vector<Object*>& objects) {
 	std::for_each(objectsMap.begin(), objectsMap.end(), [&](std::pair<std::string, Object*> obj) {
 		objects.push_back(obj.second);
 	});
-
-	return;
 }

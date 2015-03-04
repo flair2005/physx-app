@@ -24,8 +24,6 @@ private:
 protected:
 	PxVec3 m_position;
 	PxVec3 m_velocity;
-	PxVec3 m_rotation;
-
 	PxVec3 m_scale;
 
 	void getModel(std::vector<Vertex> vertices,  std::vector<DWORD> indices);
@@ -40,7 +38,7 @@ public:
 
 	PxVec3 getPosition()					{ return m_position;			}
 	PxVec3 getScale()						{ return m_scale;				}
-	PxVec3 getRotation()					{ return m_rotation;			}
+	PxQuat getRotation()					{ return m_pActor->getActor()->getGlobalPose().q;			}
 	void updatePosition();
 
 	std::vector<Vertex> getVertices()		{ return m_vertices;			}
@@ -54,6 +52,8 @@ public:
 
 	void engage()							{ m_isAlive = true;				}
 	void kill()								{ m_isAlive = false;			}
+
+	XMMATRIX convertMatrix(PxQuat q);
 
 	PxActor* getActor();
 };

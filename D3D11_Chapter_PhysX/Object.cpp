@@ -5,7 +5,6 @@ Object::Object() {
 	m_isAlive = false;
 	m_position = PxVec3(0.0f, 0.0f, 0.0f);
 	m_velocity = PxVec3(0.0f, 0.0f, 0.0f);
-	m_rotation = PxVec3(0.0f, 0.0f, 0.0f);
 }
 
 Object::~Object() {

@@ -42,7 +42,7 @@ bool Actor::construct(Physics* pPhysics, PxMaterial* pMaterial, PxVec3 pos, PxRe
 
 	PxRigidBodyExt::updateMassAndInertia(*m_pActor, density);
 	m_pActor->setLinearVelocity(velocity);
-	
+
 	return true;
 }
 

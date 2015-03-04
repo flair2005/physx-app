@@ -89,7 +89,7 @@ bool Framework::init() {
 	
 	//Temporary use of ObjectManager
 	if(!m_objectManager->addBox("box1", m_physics, m_physics->getPxPhysics()->createMaterial(0.5f, 0.5f, 0.1f),
-								PxVec3(-3.0f, 6.0f, 0.0f), 0.8f, PxVec3(0.0f, 0.0f, 0.0f), PxVec3(2.0f, 0.5f, 1.0f))) {
+								PxVec3(-3.0f, 8.0f, 0.0f), 0.8f, PxVec3(0.0f, 0.0f, 0.0f), PxVec3(2.0f, 0.5f, 1.0f))) {
 		return false;
 	}
 	if(!m_objectManager->addBox("box2", m_physics, m_physics->getPxPhysics()->createMaterial(0.5f, 0.5f, 0.1f),
@@ -97,11 +97,11 @@ bool Framework::init() {
 		return false;
 	}
 	if(!m_objectManager->addBox("box3", m_physics, m_physics->getPxPhysics()->createMaterial(0.5f, 0.5f, 0.1f),
-								PxVec3(3.0f, 6.0f, 0.0f), 0.8f, PxVec3(0.0f, 0.0f, 0.0f), PxVec3(4.0f, 4.0f, 4.0f))) {
+								PxVec3(3.0f, 8.0f, 0.0f), 0.8f, PxVec3(0.0f, 0.0f, 0.0f), PxVec3(4.0f, 4.0f, 4.0f))) {
 		return false;
 	}
 	if(!m_objectManager->addBox("box4", m_physics, m_physics->getPxPhysics()->createMaterial(0.5f, 0.5f, 0.1f),
-								PxVec3(3.0f, 2.0f, 0.0f), 0.8f, PxVec3(0.0f, 0.0f, 0.0f), PxVec3(2.0f, 0.5f, 1.0f))) {
+								PxVec3(3.0f, 6.0f, 0.0f), 0.8f, PxVec3(0.0f, 0.0f, 0.0f), PxVec3(2.0f, 0.5f, 1.0f))) {
 		return false;
 	}
 	
