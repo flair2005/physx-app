@@ -22,16 +22,16 @@ bool BitmapFont::init(char* fontFileName) {
 	if(!m_parse(fontFileName)) {
 		return false;
 	}
-	m_pShader = new Shader(m_pRender);
+	m_pShader = new Shader();
 	if(!m_pShader) {
 		return false;
 	}
-	if(!m_pShader->loadTexture(m_file.c_str())) {
+	if(!m_pShader->loadTexture(m_file.c_str(), m_pRender->getDevice())) {
 		return false;
 	}
 	m_pShader->addInputElementDesc("POSITION", DXGI_FORMAT_R32G32B32_FLOAT);
 	m_pShader->addInputElementDesc("TEXCOORD", DXGI_FORMAT_R32G32_FLOAT);
-	if(!m_pShader->createShader(L"Shaders\\BitmapFont.vs", L"Shaders\\BitmapFont.ps")) {
+	if(!m_pShader->createShader(L"Shaders\\BitmapFont.vs", L"Shaders\\BitmapFont.ps", m_pRender->getDevice())) {
 		return false;
 	}
 
@@ -173,7 +173,7 @@ void BitmapFont::buildVertexArray(VertexFont* vertex, int numVert, const wchar_t
 void BitmapFont::draw(unsigned int index, float r, float g, float b, float x, float y) {
 	m_setShaderParameters(r, g, b, x, y);
 
-	m_pShader->draw();
+	m_pShader->draw(m_pRender->getDeviceContext());
 	m_pRender->getDeviceContext()->DrawIndexed(index, 0, 0);
 }
 

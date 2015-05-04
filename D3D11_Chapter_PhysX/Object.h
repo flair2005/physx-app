@@ -3,16 +3,7 @@
 #include "DefHeaders.h"
 #include "Physics.h"
 #include "Actor.h"
-
-struct Vertex {
-	Vertex() : pos(0.0f, 0.0f, 0.0f), tex(0.0f, 0.0f), normal(0.0f, 0.0f, 0.0f) {}
-	Vertex(float x, float y, float z, float u, float v, float nx, float ny, float nz) : pos(x, y, z), 
-																						tex(u, v),
-																						normal(nx, ny, nz) {}
-	XMFLOAT3 pos;
-	XMFLOAT2 tex;
-	XMFLOAT3 normal;
-};
+#include "DataStructures.h"
 
 class  Object {
 private:

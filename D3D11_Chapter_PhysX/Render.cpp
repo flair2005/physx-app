@@ -19,29 +19,6 @@
 
 */
 
-struct cbMatrixData {
-	XMMATRIX WVP;
-	XMMATRIX world;
-};
-
-struct Light {
-	Light() {
-		ZeroMemory(this, sizeof(Light));
-	}
-	XMFLOAT3 pos;
-	float range;
-	XMFLOAT3 dir;
-	float cone;
-	XMFLOAT3 att;
-	float pad2;
-	XMFLOAT4 ambient;
-	XMFLOAT4 diffuse;
-} light;
-
-struct cbLightData {
-	Light light;
-};
-
 Render::Render() {
 	m_pd3dDevice = nullptr;
 	m_pImmediateContext = nullptr;
@@ -58,6 +35,8 @@ Render::Render() {
 	m_pConstMatrixBuffer = nullptr;
 	m_pConstLightBuffer = nullptr;
 	m_pShader = nullptr;
+	m_pTerrain = nullptr;
+	m_pCamera = nullptr;
 	isInit = false;
 }
 
@@ -136,6 +115,7 @@ bool Render::m_createDevice() {
 	sd.SampleDesc.Count = 1;
 	sd.SampleDesc.Quality = 0;
 	sd.Windowed = true;
+	sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 
 	HRESULT hr = D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, createDeviceFlags, 
 										featureLevels, numFeatureLevels, D3D11_SDK_VERSION, &sd,
@@ -250,36 +230,42 @@ void Render::m_initMatrix() {
 }
 
 bool Render::init() {
-	m_pShader = new Shader(this);
+	m_pShader = new Shader();
+	m_pTerrain = new Terrain();
+
+
 	if(!m_pShader) {
 		return false;
 	}
 
-	if(!m_pShader->loadTexture(L"Res\\image.png")) {
+	if(!m_pShader->loadTexture(L"Res\\grass.jpg", m_pd3dDevice)) {
 		return false;
 	}
 
 	m_pShader->addInputElementDesc("POSITION", DXGI_FORMAT_R32G32B32_FLOAT);
 	m_pShader->addInputElementDesc("TEXCOORD", DXGI_FORMAT_R32G32_FLOAT);
 	m_pShader->addInputElementDesc("NORMAL", DXGI_FORMAT_R32G32B32_FLOAT);
-	if(!m_pShader->createShader(L"Shaders\\pointlight.vs", L"Shaders\\pointlight.ps")) {
+	if(!m_pShader->createShader(L"Shaders\\pointlight.vs", L"Shaders\\pointlight.ps", m_pd3dDevice)) {
 		return false;
 	}
 
 	m_pConstMatrixBuffer = Buffer::createConstantBuffer(m_pd3dDevice, sizeof(cbMatrixData), false);
 	m_pConstLightBuffer = Buffer::createConstantBuffer(m_pd3dDevice, sizeof(cbLightData), false);
 
-	XMVECTOR camPosition = XMVectorSet(0.0f, 10.0f, -80.0f, 0.0f);
-	XMVECTOR camTarget = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
-	XMVECTOR camUp = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-	camView = XMMatrixLookAtLH(camPosition, camTarget, camUp);
+	m_light.dir = XMFLOAT3(0.0f, -1.0f, 0.0f);
+	m_light.ambient = XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
+	m_light.diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 
-	light.pos = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	light.range = 100.0f;
-	light.att = XMFLOAT3(0.0f, 0.2f, 0.0f);
-	light.ambient = XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f);
-	light.diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	light.cone = 10.0f;
+	
+	if(!m_pTerrain->create(&std::string("D:\\RESTORE_FILES\\Projects\\D3D11Lessons\\D3D11_Chapter_PhysX\\D3D11_Chapter_PhysX\\Res\\heightmap3.bmp"),
+											m_pd3dDevice)) {
+		Log::get()->err("Render::init() failed: unable to create Terrain");
+		return false;
+	}
+	XMVECTOR tmp = XMVectorSet(0.0f, 0.0f, 1.0f, 1.0f);
+	m_pCamera = new Camera();
+
+	m_pCamera->init(XMVectorSet(0.0f, 60.0f, -60.0f, 0.0f));
 
 	isInit = true;
 	return true;
@@ -292,30 +278,24 @@ bool Render::initObjects(ObjectManager* objectManager) {
 																	false, m_pObjectManager->getIndices());
 	m_pVertBuffer = Buffer::createVertexBuffer(m_pd3dDevice, sizeof(Vertex)*m_pObjectManager->totalVertices(),
 																	false, m_pObjectManager->getVertices());
-
 	return true;
 }
 
-bool Render::draw(PxReal dt) {
+bool Render::draw(double dt) {
+	m_pCamera->update(dt);
+	//m_light.ambient = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+	//m_light.diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 
-	light.pos.x = 0.0f;
-	light.pos.y = 0.0f-4;		//—тавим "фонарь" в центр, чуть повыше уровн€ "земли"
-	light.pos.z = 0.0f;
-
-	light.dir.x = 0.0f - light.pos.x;
-	light.dir.y = 0.0f - light.pos.y;
-	light.dir.z = 0.0f - light.pos.z;
+	cbLightData cblgh;
+	cblgh.light = m_light;
+	m_pImmediateContext->UpdateSubresource(m_pConstLightBuffer, 0 , NULL, &cblgh, 0, 0);
+	m_pImmediateContext->PSSetConstantBuffers(0, 1, &m_pConstLightBuffer);
 
 	UINT stride = sizeof(Vertex);
 	UINT offset = 0;
 	m_pImmediateContext->IASetVertexBuffers(0, 1, &m_pVertBuffer, &stride, &offset);
 	m_pImmediateContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 	m_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-	cbLightData cblgh;
-	cblgh.light = light;
-	m_pImmediateContext->UpdateSubresource(m_pConstLightBuffer, 0 , NULL, &cblgh, 0, 0);
-	m_pImmediateContext->PSSetConstantBuffers(0, 1, &m_pConstLightBuffer);
 
 	cbMatrixData cbMat;
 	XMMATRIX WVP;
@@ -332,21 +312,52 @@ bool Render::draw(PxReal dt) {
 																	objects[i]->getRotation().y, objects[i]->getRotation().z));
 		XMMATRIX scale = XMMatrixScaling(objects[i]->getScale().x, objects[i]->getScale().y, objects[i]->getScale().z);
 		//ћатрицы умножаютс€ именно в таком пор€дке
-		WVP = rotation * translation * scale * camView * m_projection;
+		WVP = rotation * translation * scale * m_pCamera->getView() * m_projection;
 		cbMat.world = XMMatrixTranspose(translation);
 		cbMat.WVP = XMMatrixTranspose(WVP);
 		m_pImmediateContext->UpdateSubresource(m_pConstMatrixBuffer, 0, NULL, &cbMat, 0, 0);
 		m_pImmediateContext->VSSetConstantBuffers(0, 1, &m_pConstMatrixBuffer);
 	
-		m_pShader->draw();
+		m_pShader->draw(m_pImmediateContext);
 
 		m_pImmediateContext->DrawIndexed(objects[i]->getIndices().size(), 0, 0);
 	}
 
+	m_renderTerrain();
+
 	return true;
 }
 
-void Render::beginFrame(PxReal dt) {
+void Render::m_renderTerrain() {
+	if(!m_pTerrain) {
+		return;
+	}
+
+	UINT stride = sizeof(Vertex);
+	UINT offset = 0;
+	m_pImmediateContext->IASetVertexBuffers(0, 1, m_pTerrain->getVertexBuffer(), &stride, &offset);
+	m_pImmediateContext->IASetIndexBuffer(m_pTerrain->getIndexBuffer(), DXGI_FORMAT_R32_UINT, 0);
+	cbMatrixData cbMat;
+	XMMATRIX WVP;
+	XMMATRIX translation;
+	XMMATRIX scale;
+
+	WVP = XMMatrixIdentity();
+	translation = XMMatrixTranslation(-100.0f, -100.0f, -100.0f);
+	scale = XMMatrixScaling(1.0f, 1.0f, 1.0f);
+
+	WVP =  translation * scale * m_pCamera->getView() * m_projection;
+	cbMat.world = XMMatrixTranspose(translation);
+	cbMat.WVP = XMMatrixTranspose(WVP);
+
+	m_pImmediateContext->UpdateSubresource(m_pConstMatrixBuffer, 0, NULL, &cbMat, 0, 0);
+	m_pImmediateContext->VSSetConstantBuffers(0, 1, &m_pConstMatrixBuffer);
+
+	m_pShader->draw(m_pImmediateContext);
+	m_pImmediateContext->DrawIndexed(m_pTerrain->getIndexCount(), 0, 0);
+}
+
+void Render::beginFrame(double dt) {
 	float clearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f };
 	m_pImmediateContext->ClearRenderTargetView(m_pRenderTargetView, clearColor);
 	m_pImmediateContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
@@ -357,10 +368,16 @@ void Render::endFrame() {
 }
 
 void Render::shutdown() {
+	m_pSwapChain->SetFullscreenState(false, NULL);
+
 	if(m_pImmediateContext) {
 		m_pImmediateContext->ClearState();
 	}
+
 	_CLOSE(m_pShader);
+
+	_DELETE(m_pTerrain);
+
 	_RELEASE(m_pAlphaEnableBlendingState);
 	_RELEASE(m_pAlphaDisableBlendingState);
 	_RELEASE(m_pDepthStencil);

@@ -135,6 +135,16 @@ bool Scene::createPlane() {
 		return false;
 	}
 
+	PxRigidDynamic* meshActor = m_pPhysics->getPxPhysics()->createRigidDynamic(PxTransform(0.0f, 1.0f, 0.0f));
+	PxShape* meshShape;
+
+	if(meshActor) {
+		meshActor->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, true);
+
+		PxTriangleMeshGeometry triGeom;
+	//	triGeom.triangleMesh = 
+	}
+
 	return true;
 }
 

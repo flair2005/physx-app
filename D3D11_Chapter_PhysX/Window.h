@@ -6,8 +6,8 @@ class Framework;
 	struct DescWindow {
 		DescWindow() : 
 					caption(L""),
-					width(640),
-					height(480),
+					width(1024),
+					height(768),
 					posx(200),
 					posy(20),
 					resizing(true)
@@ -49,11 +49,16 @@ class Framework;
 
 		void setInputMgr(InputMgr* inputmgr);
 
-		HWND getHWND() const { return m_hwnd; }
-		int getLeft() const { return m_desc.posx; }
-		int getTop() const { return m_desc.posy; }
-		int getWidth() const { return m_desc.width; }
-		int getHeidht() const { return m_desc.height; }
+		HWND getHWND() const		{ return m_hwnd; }
+		HINSTANCE getHInstance()	{ 
+			HWND hwndC = GetConsoleWindow();
+			HINSTANCE hInstC = GetModuleHandle(0);
+			return hInstC;
+		}
+		int getLeft() const			{ return m_desc.posx; }
+		int getTop() const			{ return m_desc.posy; }
+		int getWidth() const		{ return m_desc.width; }
+		int getHeidht() const		{ return m_desc.height; }
 		//Вернуть заголовок окна
 		const std::wstring& getCaption() const { return m_desc.caption; }
 

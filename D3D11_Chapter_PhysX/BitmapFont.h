@@ -4,6 +4,7 @@
 #include "Render.h"
 #include "Shader.h"
 #include "Buffer.h"
+#include "DataStructures.h"
 
 /*
 	Отвечает за создание и использование шрифтов
@@ -11,11 +12,6 @@
 	К файлу *.fnt прилагается текстура *_0(1, 2, 3...).png
 	From DirectX11 Tutorial @ zeswarchief
 */
-
-struct VertexFont {
-	XMFLOAT3 pos;
-	XMFLOAT2 tex;
-};
 
 class BitmapFont {
 private:

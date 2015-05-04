@@ -62,6 +62,8 @@ bool Window::create(const DescWindow& desc) {
 		return false;
 	}
 
+	//ShowCursor(false);
+
 	ShowWindow(m_hwnd, SW_SHOW);
 	UpdateWindow(m_hwnd);
 

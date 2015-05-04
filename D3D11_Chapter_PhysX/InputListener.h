@@ -1,5 +1,7 @@
 #pragma once
 
+#include "InputCodes.h"
+
 	//События мыши
 	struct MouseEvent {
 		MouseEvent(int nx, int ny) : x(nx), y(ny) {}

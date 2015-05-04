@@ -5,12 +5,16 @@
 #include "Log.h"
 #include "InputMgr.h"
 #include "InputListener.h"
+#include "CameraInputListener.h"
 #include "Stepper.h"
 #include "Physics.h"
 #include "Scene.h"
 #include "Fps.h"
 #include "TextManager.h"
 #include "ObjectManager.h"
+#include "Terrain.h"
+#include "Timer.h"
+#include "Input.h"
 
 /*
 	Основной класс, отвечающий за действия всех остальных классов. В нем содержатся экземпляры всех основных классов.
@@ -26,7 +30,7 @@
 
 class Framework {
 protected:
-	bool m_frame(float dt);		//Вызываем на каждой итерации приложения, оттуда уже симулируем, рисуем и т.д.
+	bool m_frame(double dt);	//Вызываем на каждой итерации приложения, оттуда уже симулируем, рисуем и т.д.
 								//dt - время, пройденное с предыдущей итерации
 	Window* m_wnd;				//Отвечает за работу окна в операционной системе; принимает сообщения от Windows
 	Render* m_render;			//Все, что касается вывода изображения на экран. Работает с DirectX11
@@ -39,11 +43,10 @@ protected:
 	Fps* m_fps;					//Вспомогательный класс; считает количество кадров в секунду и отдает их ТекстМенеджеру на отрисовку
 	ObjectManager* m_objectManager;	//Управляет всеми объектами; в объекты включены данные о вершинах и индексах, а также 
 									//представление объекта (PxRigidBody) для физикса
+	Input* m_newInput;			//TODO REFACTOR
 
 	bool m_init;
 	bool m_isRunning;			//true во время работы; false - если поступает сигнал о выходе -> приложение закрывается
-
-	float startTime;			//Время, пройденное с момента запуска приложения
 public:
 	Framework();
 	~Framework();
@@ -52,8 +55,8 @@ public:
 	void run();
 	void Close();
 
-	void preRender(float dt);
-	void postRender(float dt);
+	void preRender(double dt);
+	void postRender(double dt);
 	
 	void setRender(Render* render) { m_render = render; }
 	void addInputListener(InputListener* listener);

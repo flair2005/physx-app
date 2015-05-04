@@ -4,6 +4,9 @@
 #include "macros.h"
 #include "Log.h"
 #include "Fps.h"
+#include "Terrain.h"
+#include "DataStructures.h"
+#include "Camera.h"
 
 class Shader;
 class ObjectManager;
@@ -34,7 +37,6 @@ class Render {
 		ID3D11Buffer* m_pVertBuffer;
 		ID3D11Buffer* m_pConstMatrixBuffer;
 		ID3D11Buffer* m_pConstLightBuffer;
-		XMMATRIX camView;
 		XMMATRIX m_ortho;
 		XMMATRIX m_projection;
 
@@ -42,11 +44,18 @@ class Render {
 		unsigned int m_width;
 		unsigned int m_height;
 
+		Light m_light;
+
 		Shader* m_pShader;
+
+		Terrain* m_pTerrain;
+		Camera* m_pCamera;
 
 		bool isInit;
 		std::vector<Object*> objects;
 		ObjectManager* m_pObjectManager;
+
+		void m_renderTerrain();
 	public:
 		Render();
 		virtual ~Render();
@@ -54,12 +63,13 @@ class Render {
 		bool hasInited()							{ return isInit;				}
 
 		bool createDevice(HWND hwnd);
-		void beginFrame(PxReal dt);
+		void beginFrame(double dt);
 		void endFrame();
 		void shutdown();
 
 		ID3D11Device* getDevice()					{ return m_pd3dDevice;			}
 		ID3D11DeviceContext* getDeviceContext()		{ return m_pImmediateContext;	}
+		Camera* getCamera()							{ return m_pCamera;				}
 		unsigned int getWidth()						{ return m_width;				}
 		unsigned int getHeight()					{ return m_height;				}
 		XMMATRIX getOrtho()							{ return m_ortho;				}
@@ -68,7 +78,7 @@ class Render {
 		bool init();
 		bool initObjects(ObjectManager* objectManager);
 
-		bool draw(PxReal dt);
+		bool draw(double dt);
 		
 		void turnZBufferOn();
 		void turnZBufferOff();

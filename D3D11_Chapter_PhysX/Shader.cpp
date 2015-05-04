@@ -2,8 +2,7 @@
 
 #define MAXLAYOUT 8
 
-Shader::Shader(Render* render) {
-	m_pRender = render;
+Shader::Shader() {
 	m_pVertexShader = nullptr;
 	m_pPixelShader = nullptr;
 	m_pLayout = nullptr;
@@ -39,7 +38,7 @@ void Shader::addInputElementDesc(const char* semanticName, DXGI_FORMAT format) {
 	m_numLayout++;
 }
 
-bool Shader::createShader(wchar_t* namevs, wchar_t* nameps) {
+bool Shader::createShader(wchar_t* namevs, wchar_t* nameps, ID3D11Device* pDevice) {
 	HRESULT hr = S_OK;
 	ID3DBlob* vertexShaderBuffer = nullptr;
 	hr = m_compileShaderFromFile(namevs, "VS", "vs_4_0", &vertexShaderBuffer);
@@ -55,7 +54,7 @@ bool Shader::createShader(wchar_t* namevs, wchar_t* nameps) {
 		return false;
 	}
 
-	hr = m_pRender->getDevice()->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(),
+	hr = pDevice->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(),
 													vertexShaderBuffer->GetBufferSize(), NULL,
 													&m_pVertexShader);
 	if(FAILED(hr)) {
@@ -63,7 +62,7 @@ bool Shader::createShader(wchar_t* namevs, wchar_t* nameps) {
 		return false;
 	}
 
-	hr = m_pRender->getDevice()->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(),
+	hr = pDevice->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(),
 													pixelShaderBuffer->GetBufferSize(), NULL,
 													&m_pPixelShader);
 	if(FAILED(hr)) {
@@ -71,7 +70,7 @@ bool Shader::createShader(wchar_t* namevs, wchar_t* nameps) {
 		return false;
 	}
 
-	hr = m_pRender->getDevice()->CreateInputLayout(m_pLayoutFormat, m_numLayout, vertexShaderBuffer->GetBufferPointer(),
+	hr = pDevice->CreateInputLayout(m_pLayoutFormat, m_numLayout, vertexShaderBuffer->GetBufferPointer(),
 													vertexShaderBuffer->GetBufferSize(), &m_pLayout);
 	if(FAILED(hr)) {
 		Log::get()->err("Не удалось создать формат ввода");
@@ -103,8 +102,8 @@ HRESULT Shader::m_compileShaderFromFile(WCHAR* fileName, LPCSTR entryPoint, LPCS
 	return hr;
 }
 
-bool Shader::loadTexture(const wchar_t* name) {
-	HRESULT hr = D3DX11CreateShaderResourceViewFromFile(m_pRender->getDevice(), name, NULL, NULL, &m_pTexture, NULL);
+bool Shader::loadTexture(const wchar_t* name, ID3D11Device* pDevice) {
+	HRESULT hr = D3DX11CreateShaderResourceViewFromFile(pDevice, name, NULL, NULL, &m_pTexture, NULL);
 	if(FAILED(hr)) {
 		Log::get()->err("Не удалось загрузить текстуру %ls", name);
 		return false;
@@ -125,7 +124,7 @@ bool Shader::loadTexture(const wchar_t* name) {
 	samplerDesc.MinLOD = 0;
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
-	hr = m_pRender->getDevice()->CreateSamplerState(&samplerDesc, &m_pSampleState);
+	hr = pDevice->CreateSamplerState(&samplerDesc, &m_pSampleState);
 	if(FAILED(hr)) {
 		Log::get()->err("Не удалось создать sample state");
 		return false;
@@ -134,15 +133,15 @@ bool Shader::loadTexture(const wchar_t* name) {
 	return true;
 }
 
-void Shader::draw() {
-	m_pRender->getDeviceContext()->IASetInputLayout(m_pLayout);
-	m_pRender->getDeviceContext()->VSSetShader(m_pVertexShader, NULL, 0);
-	m_pRender->getDeviceContext()->PSSetShader(m_pPixelShader, NULL, 0);
+void Shader::draw(ID3D11DeviceContext* pImmediateContext) {
+	pImmediateContext->IASetInputLayout(m_pLayout);
+	pImmediateContext->VSSetShader(m_pVertexShader, NULL, 0);
+	pImmediateContext->PSSetShader(m_pPixelShader, NULL, 0);
 	if(m_pTexture) {
-		m_pRender->getDeviceContext()->PSSetShaderResources(0, 1, &m_pTexture);
+		pImmediateContext->PSSetShaderResources(0, 1, &m_pTexture);
 	}
 	if(m_pSampleState) {
-		m_pRender->getDeviceContext()->PSSetSamplers(0, 1, &m_pSampleState);
+		pImmediateContext->PSSetSamplers(0, 1, &m_pSampleState);
 	}
 }
 

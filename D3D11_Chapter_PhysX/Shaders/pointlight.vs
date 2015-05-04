@@ -8,23 +8,23 @@ struct VertexInputType
 {
 	float4 pos : POSITION;
 	float2 tex : TEXCOORD;
-	float3 Norm : NORMAL;
+	float3 normal : NORMAL;	
 };
 
 struct PixelInputType
 {
 	float4 pos : SV_POSITION;
 	float2 tex : TEXCOORD;
-	float3 Norm : NORMAL;
-	float4 worldPos : POSITION;
+	float3 normal : NORMAL;	
 };
 
 PixelInputType VS(VertexInputType input)
 {
 	PixelInputType output;
+
 	output.pos = mul(input.pos, WVP);
-	output.worldPos = mul(input.pos, World);
-	output.Norm = mul(input.Norm, World);
+	output.normal = mul(input.normal, World);
 	output.tex = input.tex;
+
 	return output;
 }

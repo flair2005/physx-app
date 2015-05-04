@@ -9,6 +9,7 @@ Framework::Framework() :
 			m_textManager(nullptr),
 			m_fps(nullptr),
 			m_objectManager(nullptr),
+			m_newInput(nullptr),
 			m_init(false),
 			m_isRunning(false) {
 				
@@ -37,9 +38,9 @@ bool Framework::init() {
 	m_stepper = new Stepper();
 	m_fps = new Fps();
 	m_objectManager = new ObjectManager();
+	m_newInput = new Input();
 
 	m_fps->init();
-	startTime = GetTickCount();
 
 	if(!m_wnd || !m_input) {
 		Log::get()->err("Не удалось выделить память");
@@ -53,6 +54,11 @@ bool Framework::init() {
 		return false;
 	}
 	m_wnd->setInputMgr(m_input);
+
+	if(!m_newInput->init(m_wnd->getHInstance(), m_wnd->getHWND())) {
+		Log::get()->err("Не удалось создать Input");
+		return false;
+	}
 
 	if(!m_render->createDevice(m_wnd->getHWND())) {
 		Log::get()->err("Не удалось создать устройство");
@@ -85,7 +91,8 @@ bool Framework::init() {
 		Log::get()->err("Font Create Failed");
 		return false;
 	}
-	
+	//CameraInputListener* pCameraInputListener = new CameraInputListener(m_render->getCamera());
+	//m_input->addListener(pCameraInputListener);
 	
 	//Temporary use of ObjectManager
 	if(!m_objectManager->addBox("box1", m_physics, m_physics->getPxPhysics()->createMaterial(0.5f, 0.5f, 0.1f),
@@ -128,29 +135,25 @@ void Framework::run() {
 	if(m_init) {
 		m_isRunning = true;
 
-		float currentFrameTime = startTime;
-		float prevFrameTime;
-		float dt;
-			
-		while(m_isRunning) {
-			//Считаем пройденное время с предыдущей итерации
-			prevFrameTime = currentFrameTime;
-			currentFrameTime = GetTickCount();
-			dt = currentFrameTime - prevFrameTime;
-			dt /= 1000;					//С секундами работать проще
+		Timer::startTimer();
+		double frameTime;
+		//	Костыль-хотфикс для правильного начала отсчета времени
+		frameTime = Timer::getFrameTime();
 
+		while(m_isRunning) {
 			//Симулируем, рисуем
-			m_isRunning = m_frame(dt);
+			frameTime = Timer::getFrameTime();
+			m_isRunning = m_frame(frameTime);
 		}
 	}
 }
 
-bool Framework::m_frame(float dt) {
+bool Framework::m_frame(double dt) {
 	//Обрабатываем события окна
 	m_wnd->runEvent();
 	//Если окно неактивно - завершаем кадр
 	if(!m_wnd->isActive()) {
-		return true;
+		//return true;
 	}
 
 	//Если окно было закрыто - завершаем работу движка
@@ -162,6 +165,9 @@ bool Framework::m_frame(float dt) {
 	if(m_wnd->isResize()) {
 
 	}
+
+	//	TODO REFACTOR
+	m_newInput->detectInput(dt, m_render->getCamera());
 
 	m_fps->frame();				//Замеряем время кадра в Fps
 		
@@ -182,14 +188,14 @@ bool Framework::m_frame(float dt) {
 	return true;		//true означает, что на следующей итерации снова запустится этот метод
 }
 
-void Framework::preRender(float dt) {
-	m_stepper->advance(dt);						//Собственно, даем команду физиксу на симуляцию
+void Framework::preRender(double dt) {
+	m_stepper->advance(dt);					//Собственно, даем команду физиксу на симуляцию
 	m_scene->getPxScene()->fetchResults(true);	//Теперь можно обновить сцену
 
 	m_render->beginFrame(dt);					//Обычно здесь DirectX закрашивает рабочую область окна
 }
 
-void Framework::postRender(float dt) {
+void Framework::postRender(double dt) {
 	m_render->endFrame();
 }
 

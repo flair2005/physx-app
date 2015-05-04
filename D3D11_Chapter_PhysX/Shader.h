@@ -12,8 +12,6 @@ class Shader {
 private:
 	HRESULT m_compileShaderFromFile(WCHAR* fileName, LPCSTR entryPoint, LPCSTR shaderModel, ID3DBlob** ppBlobOut);
 
-	Render* m_pRender;
-
 	ID3D11VertexShader* m_pVertexShader;
 	ID3D11PixelShader* m_pPixelShader;
 	ID3D11InputLayout* m_pLayout;
@@ -23,13 +21,13 @@ private:
 	D3D11_INPUT_ELEMENT_DESC* m_pLayoutFormat;
 	unsigned int m_numLayout;
 public:
-	Shader(Render* render);
+	Shader();
 	//Данный метод мы должны вызывать до вызова createShader
 	void addInputElementDesc(const char* semanticName, DXGI_FORMAT format);
 
-	bool createShader(wchar_t* namevs, wchar_t* nameps);
-	bool loadTexture(const wchar_t* name);
+	bool createShader(wchar_t* namevs, wchar_t* nameps, ID3D11Device* pDevice);
+	bool loadTexture(const wchar_t* name, ID3D11Device* pDevice);
 
-	void draw();
+	void draw(ID3D11DeviceContext* pImmediateContext);
 	void Close();
 };
